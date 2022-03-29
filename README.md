@@ -7,4 +7,4 @@ In order to work, you'll need to enable [SimConnect](https://docs.flightsimulato
 
 This uses the excelent package [pysimconnect](https://github.com/patricksurry/pysimconnect) from @patricksurry to get the data from de sim.
 
-![Sim2bHap screenshot](/pysim2bhap/assets/images/Sim2bHap.png)
+![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
