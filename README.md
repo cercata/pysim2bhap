@@ -7,7 +7,14 @@ In order to work, you'll need to enable [SimConnect](https://docs.flightsimulato
 
 This uses the excelent package [pysimconnect](https://github.com/patricksurry/pysimconnect) from @patricksurry to get the data from de sim.
 
+Actually it supports 3 patterns in the Vest:
+
+- When the plane aproaches non exceed speed, my back starts vibrating gradually.
+- When the RPM exceed 95%, my chest starts vibrating gradually
+- Whem G's exceed 3, my belly starts vibrating gradually
+
 ## For distribution without need to install python
+
 pyinstaller Sim2bHap.py  --add-data "scvars.json;." --add-data "scvars_idx.json;." --hidden-import=simconnect -w
-=======
+
 ![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
