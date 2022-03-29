@@ -19,6 +19,7 @@ import os, sys, os.path
 import time
 import traceback
 import configparser
+#import simconnect
 
 from tkinter import *
 from tkinter.filedialog import askopenfilename
@@ -167,11 +168,12 @@ if __name__ == "__main__":
       logformat = "%(asctime)s - PID %(process)5d - %(levelname)-8s - %(message)s - %(module)s - %(funcName)s - line:%(lineno)d"
 
       if basename.endswith('.exe'):
-        pass #we are in pyinstaller
+        Sim2bHapPath = os.path.dirname(os.path.realpath(argv[0]))
       else:
         Sim2bHapPath = os.path.dirname(os.path.realpath(__file__))
       os.chdir(Sim2bHapPath)
       logpath   = os.path.join (Sim2bHapPath, logfile)
+      print (logpath)
       
       formatter1 = logging.Formatter(logformat)
       ch1 = logging.handlers.RotatingFileHandler(logpath, maxBytes=10000000, backupCount=3)
@@ -348,4 +350,3 @@ if __name__ == "__main__":
     log.info('Ending Sim2bHaptcis properly')
   except:
     log.exception('UNEXPECTED EXCEPTION WHILE RUNNING')
-  exit()
