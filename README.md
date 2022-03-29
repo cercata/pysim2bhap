@@ -9,3 +9,5 @@ This uses the excelent package [pysimconnect](https://github.com/patricksurry/py
 
 ## For distribution without need to install python
 pyinstaller Sim2bHap.py  --add-data "scvars.json;." --add-data "scvars_idx.json;." --hidden-import=simconnect -w
+=======
+![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
