@@ -8,7 +8,7 @@ ancho = 160
 alto =  16
 windowTitleBase = "Sim2bHaptcis"
 autoScroll = True
-cycleTime = 0.125
+cycleTime = 0.042
 configFile = 'Sim2bHap.ini'
 logfile    = 'Sim2bHap.log'
 hostListValid = ['127.0.0.1']
@@ -17,7 +17,7 @@ speedThreshold = 75
 rpmThreshold = 95  
 gfeThreshold = 3 
 fullArms = False
-landThreshold = 1
+landThreshold = 5
 #########################################
 
 import os, sys, os.path
@@ -318,7 +318,7 @@ if __name__ == "__main__":
     arms.grid(row=1, column=0, columnspan=2, padx=(10,2), pady=5, sticky=W)
     varArms.set(fullArms)
     
-    landingLabel = Label(f1_1, text="Landing Threshold (fps2): ")
+    landingLabel = Label(f1_1, text="Acceleration Threshold (fps2): ")
     landingLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
     landingEntry = Entry(f1_1, width=10)
     landingEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)

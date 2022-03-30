@@ -11,10 +11,9 @@ Actually it supports 3 patterns in the Vest:
 
 - When the plane aproaches non exceed speed, my back starts vibrating gradually.
 - When the RPM exceed 95%, my chest starts vibrating gradually
-- Whem G's exceed 3, my belly starts vibrating gradually
+- When G's exceed 3, my belly starts vibrating gradually
+- When acceleration changes to quickly (impact?), all vibrates
+- Vibration when flaps and landing gear ara moving
 
-## For distribution without need to install python
-
-pyinstaller Sim2bHap.py  --add-data "scvars.json;." --add-data "scvars_idx.json;." --hidden-import=simconnect -w
 
 ![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
