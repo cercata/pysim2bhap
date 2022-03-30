@@ -1,32 +1,46 @@
 from time import sleep
 from simconnect import SimConnect, PERIOD_VISUAL_FRAME
-import better_haptic_player as player
+#import better_haptic_player as player
+import haptic_player
 import os
+import time
 import traceback
 
-varList = ["GENERAL ENG RPM:1", "GENERAL ENG PCT MAX RPM:1", "PROP MAX RPM PERCENT:1", "AIRSPEED MACH", "BARBER POLE MACH",
-           "ACCELERATION BODY X", "ACCELERATION BODY Y", "ACCELERATION BODY Z", "SIM ON GROUND", "TRAILING EDGE FLAPS LEFT PERCENT",
-           "LEFT WHEEL RPM", "GEAR LEFT POSITION", "GEAR RIGHT POSITION", "G FORCE", "TITLE"]
+varList = ["GENERAL ENG PCT MAX RPM:1", "AIRSPEED MACH", "BARBER POLE MACH",
+           "ACCELERATION BODY X", "ACCELERATION BODY Y", "ACCELERATION BODY Z", 
+           "SIM ON GROUND", "TRAILING EDGE FLAPS LEFT PERCENT", "LEFT WHEEL RPM", 
+           "GEAR LEFT POSITION", "GEAR RIGHT POSITION", "G FORCE", "TITLE"]
 
 
 class Sim():
   def __init__(self, port = 500, ipAddr = '127.0.0.1'):
     self.speedThreshold = 0.75
     self.rpmThreshold = 0.95
-    self.gfThreshold = 3
+    self.gfeThreshold = 3
+    self.fullArms = False
+    self.landThreshold = 1
+    self.player = haptic_player.HapticPlayer()
+    
+  def play(self, name, intensity, altname):
+    self.player.submit_registered_with_option(name, altname,
+       scale_option={"intensity": intensity, "duration": 1},
+       rotation_option={"offsetAngleX": 0, "offsetY": 0})
 
   def start(self):
     self.cycle = 0
     self.ValueDict = {}
     self.sc = None
+    self.lastGeforce = None
     errCode = 'valid'
     try:
-      player.initialize()
+      print (self.gfeThreshold)
+      #player.initialize()
       
       # tact file can be exported from bhaptics designer
-      player.register("msfs_vvne", "msfs_vvne.tact")
-      player.register("msfs_vrpm", "msfs_vrpm.tact")
-      player.register("msfs_vgfe", "msfs_vgfe.tact")
+      self.player.register("msfs_vvne", "msfs_vvne.tact")
+      self.player.register("msfs_vrpm", "msfs_vrpm.tact")
+      self.player.register("msfs_vgfe", "msfs_vgfe.tact")
+      self.player.register("msfs_arpm", "msfs_arpm.tact")
       # open a connection to the SDK
       # or use as a context via `with SimConnect() as sc: ... `
       self.sc = SimConnect()
@@ -44,8 +58,8 @@ class Sim():
           interval=1,
       )
       # track the most recent data update
-      self.latest = self.datadef.simdata.latest()
-      print("Inferred variable units", self.datadef.get_units())
+      #self.latest = self.datadef.simdata.latest()
+      #print("Inferred variable units", self.datadef.get_units())
       msg = "msfsBHap started\n"
     except Exception as excp:
       errCode = 'error'
@@ -70,44 +84,58 @@ class Sim():
       for varName in self.datadef.simdata:
         self.ValueDict[varName] = self.datadef.simdata[varName]
    
-      self.latest = self.datadef.simdata.latest()
+      #self.latest = self.datadef.simdata.latest()
    
       speedVibration = (self.datadef.simdata["AIRSPEED MACH"]/self.datadef.simdata["BARBER POLE MACH"]) - self.speedThreshold
       if (speedVibration > 0):
         speedVibration = speedVibration * speedVibration * 4
         if (speedVibration > 0.01):
           msg += "SPEED {} {}\n".format(speedVibration, self.datadef.simdata["AIRSPEED MACH"])
-          player.submit_registered_with_option("msfs_vvne", "alt",
-                        scale_option={"intensity": speedVibration, "duration": 1},
-                        rotation_option={"offsetAngleX": 0, "offsetY": 0})
+          if self.fullArms:
+            self.play("msfs_arpm", speedVibration, "alt1")
+          self.play("msfs_vvne", speedVibration, "alt2")
+          #player.submit_registered_with_option("msfs_vvne", "alt1",
+          #              scale_option={"intensity": speedVibration, "duration": 1},
+          #              rotation_option={"offsetAngleX": 0, "offsetY": 0})
                       
       engineVibration = self.datadef.simdata["GENERAL ENG PCT MAX RPM:1"]/100 - self.rpmThreshold
       if (engineVibration > 0):
         engineVibration = engineVibration * engineVibration * 4
         if (engineVibration > 0.01):
           msg += "RPM {} {}\n".format(engineVibration, self.datadef.simdata["GENERAL ENG PCT MAX RPM:1"])
-          player.submit_registered_with_option("msfs_vrpm", "alt2",
-                        scale_option={"intensity": engineVibration, "duration": 1},
-                        rotation_option={"offsetAngleX": 0, "offsetY": 0})
+          self.play("msfs_arpm", engineVibration, "alt3")
+          self.play("msfs_vrpm", engineVibration, "alt4")
+          #player.submit_registered_with_option("msfs_vrpm", "alt2",
+          #              scale_option={"intensity": engineVibration, "duration": 1},
+          #              rotation_option={"offsetAngleX": 0, "offsetY": 0})
    
+
+       
+      self.lastGeforce = self.datadef.simdata["G FORCE"]
    
-      gForceVibration = (self.datadef.simdata["G FORCE"] - self.gfThreshold) / 10
+      gForceVibration = (self.datadef.simdata["G FORCE"] - self.gfeThreshold) / 8
       if (gForceVibration > 0):
         gForceVibration = gForceVibration * gForceVibration * 4
         if (gForceVibration > 0.01):
           msg += "GFe {} {}\n".format(gForceVibration, self.datadef.simdata["G FORCE"])
-          player.submit_registered_with_option("msfs_vgfe", "alt3",
-                        scale_option={"intensity": gForceVibration, "duration": 1},
-                        rotation_option={"offsetAngleX": 0, "offsetY": 0})
+          if self.fullArms:
+            self.play("msfs_arpm", gForceVibration, "alt5")
+          self.play("msfs_vgfe", gForceVibration, "alt6")
+          #player.submit_registered_with_option("msfs_vgfe", "alt4",
+          #              scale_option={"intensity": gForceVibration, "duration": 1},
+          #              rotation_option={"offsetAngleX": 0, "offsetY": 0})
+
     except Exception as excp:
       errCode = 'error'
       msg = (str(excp)+'\n'+traceback.format_exc())
 
     return (msg, errCode)
   def stop(self):
+    #player.destroy()
     if self.sc:
       self.sc.Close()
-    player.destroy()
+      self.sc = None
+      self.datadef = None
     return ("msfsBHap stopped\n", "valid")
 
 if __name__ == "__main__": 

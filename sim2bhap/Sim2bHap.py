@@ -4,7 +4,7 @@
 #########################################
 fuente = ("courier new", "10")
 fuenteNeg = ("courier new", "10", "bold")
-ancho = 80
+ancho = 160
 alto =  16
 windowTitleBase = "Sim2bHaptcis"
 autoScroll = True
@@ -13,6 +13,11 @@ configFile = 'Sim2bHap.ini'
 logfile    = 'Sim2bHap.log'
 hostListValid = ['127.0.0.1']
 port = 500
+speedThreshold = 75
+rpmThreshold = 95  
+gfeThreshold = 3 
+fullArms = False
+landThreshold = 1
 #########################################
 
 import os, sys, os.path
@@ -94,6 +99,8 @@ def runFunc():
     speedThreshold = float(speedEntry.get())/100
     rpmThreshold   = float(rpmEntry.get())/100
     gfeThreshold   = float(gfeEntry.get())
+    fullArms       = varArms.get()
+    landThreshold  = float(landingEntry.get())
     if simName == 'MSFS':
       import msfsBHap
       try:
@@ -103,6 +110,8 @@ def runFunc():
       sim.speedThreshold = speedThreshold
       sim.rpmThreshold   = rpmThreshold
       sim.gfeThreshold   = gfeThreshold
+      sim.fullArms       = fullArms
+      sim.landThreshold  = landThreshold
       output = sim.start()
       time.sleep(1)
       display_msg(output[0], tag = output[1])
@@ -131,6 +140,7 @@ def runFunc():
         display_msg(traceback.format_exc(), tag = "error")
         time.sleep(cycleTime*2)
     output = sim.stop()
+    sim = None
     if (output[1] == 'error'):
       connectedLabel['background'] = 'red'
     display_msg(output[0], tag = output[1])
@@ -168,16 +178,15 @@ if __name__ == "__main__":
       logformat = "%(asctime)s - PID %(process)5d - %(levelname)-8s - %(message)s - %(module)s - %(funcName)s - line:%(lineno)d"
 
       if basename.endswith('.exe'):
-        Sim2bHapPath = os.path.dirname(os.path.realpath(argv[0]))
+        Sim2bHapPath = os.path.dirname(os.path.realpath(sys.argv[0]))
       else:
         Sim2bHapPath = os.path.dirname(os.path.realpath(__file__))
       os.chdir(Sim2bHapPath)
       logpath   = os.path.join (Sim2bHapPath, logfile)
-      print (logpath)
       
       formatter1 = logging.Formatter(logformat)
       ch1 = logging.handlers.RotatingFileHandler(logpath, maxBytes=10000000, backupCount=3)
-      ch1.setLevel(log.DEBUG)
+      ch1.setLevel(log.INFO)
       ch1.setFormatter(formatter1)
       log.getLogger().addHandler(ch1)
       
@@ -207,8 +216,19 @@ if __name__ == "__main__":
           for hostip in hostlist:
             hostip = hostip.strip()
             hostListValid.append(hostip.strip())
-      if parser.has_option('host','port'):
-        port = parser.getint('host','port')
+        if parser.has_option('host','port'):
+          port = parser.getint('host','port')
+      if parser.has_section('values'):
+        if parser.has_option('values','speedThreshold'):
+          speedThreshold = parser.getint('values','speedThreshold')
+        if parser.has_option('values','rpmThreshold'):
+          rpmThreshold = parser.getint('values','rpmThreshold')
+        if parser.has_option('values','gfeThreshold'):
+          gfeThreshold = parser.getfloat('values','gfeThreshold')
+        if parser.has_option('values','fullArms'):
+          fullArms = parser.getboolean('values','fullArms')
+        if parser.has_option('values','landThreshold'):
+          landThreshold = parser.getint('values','landThreshold')
     except:
       log.exception('Error reading configuration file')
 
@@ -269,35 +289,40 @@ if __name__ == "__main__":
     f1 = Frame(root)
 
     f1_0 = Frame(f1, relief=SUNKEN, width = "500")
-
+    
     speedLabel = Label(f1_0, text="Speed Threshold (%): ")
     speedLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
     speedEntry = Entry(f1_0, width=10)
     speedEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
-    speedEntry.insert(0,"75")
+    speedEntry.insert(0,str(speedThreshold))
 
     rpmLabel = Label(f1_0, text="RPM Threshold (%): ")
     rpmLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
     rpmEntry = Entry(f1_0, width=10)
     rpmEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
-    rpmEntry.insert(0,"95")
+    rpmEntry.insert(0,str(rpmThreshold))
 
     gfeLabel = Label(f1_0, text="G Force Threshold (Gs): ")
     gfeLabel.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
     gfeEntry = Entry(f1_0, width=10)
     gfeEntry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
-    gfeEntry.insert(0,"3")
+    gfeEntry.insert(0,str(gfeThreshold))
 
 
     f1_0.grid(row=0, column=0, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
 
     f1_1 = Frame(f1, relief=SUNKEN)
     
-    dummy1Label = Label(f1_1, text="dummy label: ")
-    dummy1Label.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
-    dummy1Entry = Entry(f1_1, width=10)
-    dummy1Entry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
-    dummy1Entry.insert(0,"0")
+    varArms = IntVar()
+    arms= Checkbutton(f1_1, text="All in Arms", variable = varArms, onvalue = 1, offvalue = 0)
+    arms.grid(row=1, column=0, columnspan=2, padx=(10,2), pady=5, sticky=W)
+    varArms.set(fullArms)
+    
+    landingLabel = Label(f1_1, text="Landing Threshold (fps2): ")
+    landingLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
+    landingEntry = Entry(f1_1, width=10)
+    landingEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
+    landingEntry.insert(0,str(landThreshold))
 
     dummy2Label = Label(f1_1, text="dummy label: ")
     dummy2Label.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
@@ -305,13 +330,13 @@ if __name__ == "__main__":
     dummy2Entry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
     dummy2Entry.insert(0,"0")
 
-    dummy3Label = Label(f1_1, text="dummy label: ")
-    dummy3Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
-    dummy3Entry = Entry(f1_1, width=10)
-    dummy3Entry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
-    dummy3Entry.insert(0,"0")
+    #dummy3Label = Label(f1_1, text="dummy label: ")
+    #dummy3Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
+    #dummy3Entry = Entry(f1_1, width=10)
+    #dummy3Entry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
+    #dummy3Entry.insert(0,"0")
     
-    #f1_1.grid(row=0, column=1, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
+    f1_1.grid(row=0, column=1, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
       
     f1.pack(padx=0, pady=0, side=TOP, fill=X)
 
