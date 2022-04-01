@@ -15,9 +15,11 @@ hostListValid = ['127.0.0.1']
 port = 500
 speedThreshold = 75
 rpmThreshold = 95  
-gfeThreshold = 3 
+gfeThreshold = 3
+maxSpeed = 700
+maxRpm = 3000
 fullArms = False
-landThreshold = 5
+accelThreshold = 0.5
 #########################################
 
 import os, sys, os.path
@@ -99,19 +101,26 @@ def runFunc():
     speedThreshold = float(speedEntry.get())/100
     rpmThreshold   = float(rpmEntry.get())/100
     gfeThreshold   = float(gfeEntry.get())
+    maxSpeed       = float(maxSpeedEntry.get())
+    maxRpm         = float(maxRpmEntry.get())
     fullArms       = varArms.get()
-    landThreshold  = float(landingEntry.get())
+    accelThreshold  = float(accelEntry.get())
     if simName == 'MSFS':
       import msfsBHap
-      try:
-        sim = msfsBHap.Sim(port, ipAddr)
-      except:
-        sim = dummySim(port, ipAddr)
+      sim = msfsBHap.Sim(port, ipAddr)
+    elif simName == 'IL2BoX':
+      sim = dummySim(port, ipAddr)
+    else:
+      display_msg("Invalid sim\n", tag = "error")  
+      run = 0
+    if run:
       sim.speedThreshold = speedThreshold
       sim.rpmThreshold   = rpmThreshold
       sim.gfeThreshold   = gfeThreshold
       sim.fullArms       = fullArms
-      sim.landThreshold  = landThreshold
+      sim.accelThreshold  = accelThreshold
+      sim.maxSpeed       = maxSpeed
+      sim.maxRpm         = maxRpm  
       output = sim.start()
       time.sleep(1)
       display_msg(output[0], tag = output[1])
@@ -120,9 +129,6 @@ def runFunc():
       else:
         connectedLabel['background'] = 'red'
         run = 0
-    else:
-      display_msg("Invalid sim\n", tag = "error")  
-      run = 0
     while run:
       try:
         output = sim.runCycle()
@@ -220,15 +226,19 @@ if __name__ == "__main__":
           port = parser.getint('host','port')
       if parser.has_section('values'):
         if parser.has_option('values','speedThreshold'):
-          speedThreshold = parser.getint('values','speedThreshold')
+          speedThreshold = parser.getfloat('values','speedThreshold')
         if parser.has_option('values','rpmThreshold'):
-          rpmThreshold = parser.getint('values','rpmThreshold')
+          rpmThreshold = parser.getfloat('values','rpmThreshold')
         if parser.has_option('values','gfeThreshold'):
           gfeThreshold = parser.getfloat('values','gfeThreshold')
+        if parser.has_option('values','maxSpeed'):
+          maxSpeed = parser.getfloat('values','maxSpeed')
+        if parser.has_option('values','maxRpm'):
+          maxRpm = parser.getfloat('values','maxRpm')
         if parser.has_option('values','fullArms'):
           fullArms = parser.getboolean('values','fullArms')
-        if parser.has_option('values','landThreshold'):
-          landThreshold = parser.getint('values','landThreshold')
+        if parser.has_option('values','accelThreshold'):
+          accelThreshold = parser.getfloat('values','accelThreshold')
     except:
       log.exception('Error reading configuration file')
 
@@ -241,15 +251,15 @@ if __name__ == "__main__":
      
     simLabel = Label(f0, text="Sim:")
     simLabel.grid(row=0, column=0, padx=1, pady=2, sticky=W)
-    simCombo = Combobox(f0, width=15)
+    simCombo = Combobox(f0, width=12)
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
-    simCombo['values']=['MSFS']
+    simCombo['values']=['MSFS', 'IL2BoX']
     simCombo.current(0)
 
     hostLabel = Label(f0, text="IP:")
     hostLabel.grid(row=0, column=2, padx=1, pady=2, sticky=W)
-    hostCombo = Combobox(f0, width=15)
+    hostCombo = Combobox(f0, width=12)
     hostCombo.grid(row=0, column=3, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
     hostCombo['values'] =hostListValid
@@ -257,7 +267,7 @@ if __name__ == "__main__":
 
     portLabel = Label(f0, text="Port:")
     portLabel.grid(row=0, column=4, padx=(8,1), pady=2, sticky=W)
-    portEntry = Entry(f0, width=10)
+    portEntry = Entry(f0, width=8)
     portEntry.grid(row=0, column=5, padx=0, pady=2, sticky=W)
     portEntry.insert(0, str(port))
 
@@ -313,30 +323,46 @@ if __name__ == "__main__":
 
     f1_1 = Frame(f1, relief=SUNKEN)
     
+    maxSpeedLabel = Label(f1_1, text="Max Speed(Kmh): ")
+    maxSpeedLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
+    maxSpeedEntry = Entry(f1_1, width=10)
+    maxSpeedEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
+    maxSpeedEntry.insert(0,maxSpeed)
+
+    maxRpmLabel = Label(f1_1, text="Max RPM: ")
+    maxRpmLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
+    maxRpmEntry = Entry(f1_1, width=10)
+    maxRpmEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
+    maxRpmEntry.insert(0,maxRpm)
+
+    accelLabel = Label(f1_1, text="Accel. Threshold: ")
+    accelLabel.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
+    accelEntry = Entry(f1_1, width=10)
+    accelEntry.grid(row=4, column=1, padx=2, pady=(10,6), sticky=W)
+    accelEntry.insert(0,str(accelThreshold))
+    
+    f1_1.grid(row=0, column=1, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
+    
+    f1_2 = Frame(f1, relief=SUNKEN)
+    
     varArms = IntVar()
-    arms= Checkbutton(f1_1, text="All in Arms", variable = varArms, onvalue = 1, offvalue = 0)
+    arms= Checkbutton(f1_2, text="All in Arms", variable = varArms, onvalue = 1, offvalue = 0)
     arms.grid(row=1, column=0, columnspan=2, padx=(10,2), pady=5, sticky=W)
     varArms.set(fullArms)
     
-    landingLabel = Label(f1_1, text="Acceleration Threshold (fps2): ")
-    landingLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
-    landingEntry = Entry(f1_1, width=10)
-    landingEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
-    landingEntry.insert(0,str(landThreshold))
-
-    dummy2Label = Label(f1_1, text="dummy label: ")
+    dummy2Label = Label(f1_2, text="dummy label: ")
     dummy2Label.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
-    dummy2Entry = Entry(f1_1, width=10)
+    dummy2Entry = Entry(f1_2, width=10)
     dummy2Entry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
     dummy2Entry.insert(0,"0")
 
-    #dummy3Label = Label(f1_1, text="dummy label: ")
-    #dummy3Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
-    #dummy3Entry = Entry(f1_1, width=10)
-    #dummy3Entry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
-    #dummy3Entry.insert(0,"0")
-    
-    f1_1.grid(row=0, column=1, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
+    dummy3Label = Label(f1_2, text="dummy label: ")
+    dummy3Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
+    dummy3Entry = Entry(f1_2, width=10)
+    dummy3Entry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
+    dummy3Entry.insert(0,"0")
+
+    f1_2.grid(row=0, column=2, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
       
     f1.pack(padx=0, pady=0, side=TOP, fill=X)
 

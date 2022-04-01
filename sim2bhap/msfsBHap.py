@@ -19,7 +19,7 @@ class Sim():
     self.rpmThreshold = 0.95
     self.gfeThreshold = 3
     self.fullArms = False
-    self.landThreshold = 5
+    self.accelThreshold = 0.5
     self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname):
@@ -96,7 +96,7 @@ class Sim():
       acel = math.sqrt(abs(acelY*acel2))
       if (self.lastAcel is not None):
         acelChange = abs(acel - self.lastAcel)
-        impactForce = (acelChange - self.landThreshold) / 50.0
+        impactForce = (acelChange - self.accelThreshold) / 50.0
       self.lastAcel = acel
       
       if impactForce > 0.1:
