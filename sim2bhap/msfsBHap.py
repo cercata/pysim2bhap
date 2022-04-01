@@ -19,11 +19,12 @@ class Sim():
     self.fullArms = False
     self.accelThreshold = 0.5
     self.forceMultiplier = 1.0
+    self.durationMultiplier = 1.0
     self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname, duration = 1):
     self.player.submit_registered_with_option(name, altname,
-       scale_option={"intensity": intensity*self.forceMultiplier, "duration": duration},
+       scale_option={"intensity": intensity*self.forceMultiplier, "duration": duration*self.durationMultiplier},
        rotation_option={"offsetAngleX": 0, "offsetY": 0})
 
   def start(self):

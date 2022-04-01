@@ -22,6 +22,7 @@ maxRpm = 3000
 fullArms = False
 accelThreshold = 0.5
 forceMultiplier = 1.0
+durationMultiplier = 1.0
 #########################################
 
 import os, sys, os.path
@@ -108,6 +109,7 @@ def runFunc():
     fullArms       = varArms.get()
     accelThreshold  = float(accelEntry.get())
     forceMultiplier = float(multiEntry.get())
+    durationMultiplier = float(multi2Entry.get())
     if simName == 'MSFS':
       import msfsBHap
       sim = msfsBHap.Sim(port, ipAddr)
@@ -129,6 +131,7 @@ def runFunc():
       sim.maxSpeed       = maxSpeed
       sim.maxRpm         = maxRpm 
       sim.forceMultiplier= forceMultiplier
+      sim.durationMultiplier = durationMultiplier
       output = sim.start()
       time.sleep(1)
       display_msg(output[0], tag = output[1])
@@ -255,6 +258,9 @@ if __name__ == "__main__":
           accelThreshold = parser.getfloat('values','accelThreshold')
         if parser.has_option('values','forceMultiplier'):
           forceMultiplier = parser.getfloat('values','forceMultiplier')
+        if parser.has_option('values','durationMultiplier'):
+          durationMultiplier = parser.getfloat('values','durationMultiplier')
+          
     except:
       log.exception('Error reading configuration file')
 
@@ -375,11 +381,11 @@ if __name__ == "__main__":
     multiEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
     multiEntry.insert(0,forceMultiplier)
 
-    dummy3Label = Label(f1_2, text="dummy label: ")
-    dummy3Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
-    dummy3Entry = Entry(f1_2, width=10)
-    dummy3Entry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
-    dummy3Entry.insert(0,"0")
+    multi2Label = Label(f1_2, text="Duration Multiplier: ")
+    multi2Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
+    multi2Entry = Entry(f1_2, width=10)
+    multi2Entry.grid(row=4, column=1, padx=2, pady=(6,6), sticky=W)
+    multi2Entry.insert(0,durationMultiplier)
 
     f1_2.grid(row=0, column=2, padx=5, pady=5, ipadx=5, ipady=5,sticky=W+N+S+E)
       
