@@ -13,6 +13,7 @@ configFile = 'Sim2bHap.ini'
 logfile    = 'Sim2bHap.log'
 hostListValid = ['127.0.0.1']
 port = 500
+activeSim = 'MSFS'
 speedThreshold = 75
 rpmThreshold = 95  
 gfeThreshold = 3
@@ -236,6 +237,8 @@ if __name__ == "__main__":
         if parser.has_option('host','port'):
           port = parser.getint('host','port')
       if parser.has_section('values'):
+        if parser.has_option('values','activeSim'):
+          activeSim = parser.get('values','activeSim').strip()
         if parser.has_option('values','speedThreshold'):
           speedThreshold = parser.getfloat('values','speedThreshold')
         if parser.has_option('values','rpmThreshold'):
@@ -268,7 +271,10 @@ if __name__ == "__main__":
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
     simCombo['values']=['MSFS', 'IL2BoX']
-    simCombo.current(0)
+    try:
+      simCombo.current(simCombo['values'].index(activeSim))
+    except:
+      simCombo.current(0)
 
     hostLabel = Label(f0, text="IP:")
     hostLabel.grid(row=0, column=2, padx=1, pady=2, sticky=W)
