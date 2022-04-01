@@ -18,11 +18,12 @@ class Sim():
     self.gfeThreshold = 3
     self.fullArms = False
     self.accelThreshold = 0.5
+    self.forceMultiplier = 1.0
     self.player = haptic_player.HapticPlayer()
     
-  def play(self, name, intensity, altname):
+  def play(self, name, intensity, altname, duration = 1):
     self.player.submit_registered_with_option(name, altname,
-       scale_option={"intensity": intensity, "duration": 1},
+       scale_option={"intensity": intensity*self.forceMultiplier, "duration": duration},
        rotation_option={"offsetAngleX": 0, "offsetY": 0})
 
   def start(self):
@@ -89,16 +90,16 @@ class Sim():
       impactForce = 0
       acelX = self.datadef.simdata["ACCELERATION BODY X"]
       acelZ = self.datadef.simdata["ACCELERATION BODY Z"]
-      acel2 = math.sqrt(abs(acelX*acelZ))
+      acel2 = math.sqrt(acelX*acelX+acelZ*acelZ)
       acelY = self.datadef.simdata["ACCELERATION BODY Y"]
-      acel = math.sqrt(abs(acelY*acel2))
+      acel = math.sqrt(acelY*acelY+acel2*acel2)
       if (self.lastAcel is not None):
         acelChange = abs(acel - self.lastAcel)
         impactForce = (acelChange - self.accelThreshold) / 50.0
       self.lastAcel = acel
       
-      if impactForce > 0.1:
-        msg += "Ace {} {}\n".format(impactForce, acelChange)
+      if impactForce > 0.01:
+        msg += "Acc {} {}\n".format(impactForce, acelChange)
         self.play("msfs_arpm", impactForce, "alt1") 
         self.play("msfs_vace", impactForce, "alt2") 
 

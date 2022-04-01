@@ -20,6 +20,7 @@ maxSpeed = 700
 maxRpm = 3000
 fullArms = False
 accelThreshold = 0.5
+forceMultiplier = 1.0
 #########################################
 
 import os, sys, os.path
@@ -105,11 +106,16 @@ def runFunc():
     maxRpm         = float(maxRpmEntry.get())
     fullArms       = varArms.get()
     accelThreshold  = float(accelEntry.get())
+    forceMultiplier = float(multiEntry.get())
     if simName == 'MSFS':
       import msfsBHap
       sim = msfsBHap.Sim(port, ipAddr)
     elif simName == 'IL2BoX':
-      sim = dummySim(port, ipAddr)
+      try:
+        import il2bBHap
+        sim = il2bBHap.Sim(port, ipAddr)
+      except:
+        sim = dummySim(port, ipAddr)
     else:
       display_msg("Invalid sim\n", tag = "error")  
       run = 0
@@ -120,7 +126,8 @@ def runFunc():
       sim.fullArms       = fullArms
       sim.accelThreshold  = accelThreshold
       sim.maxSpeed       = maxSpeed
-      sim.maxRpm         = maxRpm  
+      sim.maxRpm         = maxRpm 
+      sim.forceMultiplier= forceMultiplier
       output = sim.start()
       time.sleep(1)
       display_msg(output[0], tag = output[1])
@@ -131,6 +138,7 @@ def runFunc():
         run = 0
     while run:
       try:
+        startTime = time.time()
         output = sim.runCycle()
         if (output[1] != 'error'):
           connectedLabel['background'] = 'spring green'
@@ -141,7 +149,10 @@ def runFunc():
         else:
           connectedLabel['background'] = 'red'
           display_msg(output[0], tag = output[1])
-        time.sleep(cycleTime)
+        elapsed = time.time() - startTime
+        sleepTime = cycleTime - elapsed
+        if sleepTime > 0:
+          time.sleep(sleepTime)
       except:
         display_msg(traceback.format_exc(), tag = "error")
         time.sleep(cycleTime*2)
@@ -239,6 +250,8 @@ if __name__ == "__main__":
           fullArms = parser.getboolean('values','fullArms')
         if parser.has_option('values','accelThreshold'):
           accelThreshold = parser.getfloat('values','accelThreshold')
+        if parser.has_option('values','forceMultiplier'):
+          forceMultiplier = parser.getfloat('values','forceMultiplier')
     except:
       log.exception('Error reading configuration file')
 
@@ -350,11 +363,11 @@ if __name__ == "__main__":
     arms.grid(row=1, column=0, columnspan=2, padx=(10,2), pady=5, sticky=W)
     varArms.set(fullArms)
     
-    dummy2Label = Label(f1_2, text="dummy label: ")
-    dummy2Label.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
-    dummy2Entry = Entry(f1_2, width=10)
-    dummy2Entry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
-    dummy2Entry.insert(0,"0")
+    multiLabel = Label(f1_2, text="Force Multiplier: ")
+    multiLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
+    multiEntry = Entry(f1_2, width=10)
+    multiEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
+    multiEntry.insert(0,forceMultiplier)
 
     dummy3Label = Label(f1_2, text="dummy label: ")
     dummy3Label.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
