@@ -21,7 +21,8 @@ Actually it supports 5 patterns in the Vest:
 
 You need to enable UDP motion and telemetry data adding this to your `data\startup.cfg` file:
 
-```[KEY = motiondevice]
+```
+[KEY = motiondevice]
 	addr = "127.0.0.1"
 	decimation = 2
 	enable = true
@@ -33,7 +34,8 @@ You need to enable UDP motion and telemetry data adding this to your `data\start
 	decimation = 2
 	enable = true
 	port = 29373
-[END]```
+[END]
+```
 
 Actually it supports 6 patterns in the Vest:
 
