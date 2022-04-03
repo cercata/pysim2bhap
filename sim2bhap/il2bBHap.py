@@ -74,10 +74,11 @@ class Sim():
         self.flaps = value[0]
       #print ("Var {} : {}".format(varId, value))
     lastByte = buff[pos]
-    hitThreashold = 156
-    self.gun = (lastByte == 1) and (packetLen < hitThreashold)
-    self.cannon = (lastByte in (2,3)) and (packetLen < hitThreashold)
-    self.hit = (lastByte not in (8, 9, 11)) and (packetLen >= hitThreashold)
+    gunThreashold = 200
+    hitThreashold = 500 #156
+    self.gun = (lastByte in (1,)) and (packetLen < gunThreashold)
+    self.cannon = (lastByte in (2, 3, 4, 5)) and (packetLen < gunThreashold)
+    self.hit = (lastByte not in (8, 9, 10, 11, 12, 13)) and (packetLen >= hitThreashold)
     if self.hit:
       print ("Hit {} len {}".format(lastByte, packetLen))
     #print ("Last Byte {}".format(lastByte))

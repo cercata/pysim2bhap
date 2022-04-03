@@ -46,4 +46,6 @@ Actually it supports 6 patterns in the Vest:
 - Vibration when flaps and landing gear are moving
 - Vibration when you fire the gun or cannons, and when you get hit
 
+[Recomended settings for several IL2B planes](settingsIL2B.md)
+
 ![Sim2bHapIL2 screenshot](/assets/images/Sim2bHapIL2.png)
