@@ -33,6 +33,7 @@ class Sim():
     self.maxRpm = 3000.0
     self.forceMultiplier = 1.0
     self.durationMultiplier = 1.0
+    self.lastPacket = 0
     self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname, duration = 1):
@@ -69,22 +70,24 @@ class Sim():
         g1 = math.sqrt(value[0]*value[0]+value[1]*value[1])
         g2 = math.sqrt(value[2]*value[2]+g1*g1)
         self.g = g2 / 9.8
-        print (self.g)
       elif (varId == 11):
         self.flaps = value[0]
-      print ("Var {} : {}".format(varId, value))
+      #print ("Var {} : {}".format(varId, value))
     lastByte = buff[pos]
     hitThreashold = 156
     self.gun = (lastByte == 1) and (packetLen < hitThreashold)
     self.cannon = (lastByte in (2,3)) and (packetLen < hitThreashold)
-    self.hit = ((lastByte < 8) or (lastByte > 9)) and (packetLen >= hitThreashold)
-    print ("Last Byte {}".format(lastByte))
+    self.hit = (lastByte not in (8, 9, 11)) and (packetLen >= hitThreashold)
+    if self.hit:
+      print ("Hit {} len {}".format(lastByte, packetLen))
+    #print ("Last Byte {}".format(lastByte))
   
   def recvUdpData(self):
 
     while True:
       try:
          (msg, addr) = self.s.recvfrom(10000)
+         self.lastPacket = time.time()
          (packetID ,) = structLong.unpack(msg[0:4])
          if packetID == 0x494C0100:
            self.parseMotion(msg[4:])
@@ -142,6 +145,8 @@ class Sim():
    
       self.recvUdpData()
       
+      if (time.time() - self.lastPacket) > 0.5:
+        return (msg, errCode)
       
       if self.acc is not None:
         impactForce = 0
