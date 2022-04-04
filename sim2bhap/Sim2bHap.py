@@ -360,7 +360,7 @@ if __name__ == "__main__":
     maxRpmEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
     maxRpmEntry.insert(0,maxRpm)
 
-    accelLabel = Label(f1_1, text="Accel. Threshold: ")
+    accelLabel = Label(f1_1, text="Accel. Threshold (m/s2): ")
     accelLabel.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
     accelEntry = Entry(f1_1, width=10)
     accelEntry.grid(row=4, column=1, padx=2, pady=(10,6), sticky=W)

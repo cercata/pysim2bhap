@@ -1,11 +1,12 @@
 from time import sleep
-from simconnect import SimConnect, PERIOD_VISUAL_FRAME
+#from importlib import reload 
 #import better_haptic_player as player
 import haptic_player
-import os
+import os, sys
 import time
 import math
 import traceback
+import simconnect
 
 varList = ["GENERAL ENG PCT MAX RPM:1", "AIRSPEED MACH", "BARBER POLE MACH",
            "ACCELERATION BODY X", "ACCELERATION BODY Y", "ACCELERATION BODY Z", 
@@ -47,7 +48,7 @@ class Sim():
       self.player.register("msfs_vfla", "msfs_vfla.tact")
       # open a connection to the SDK
       # or use as a context via `with SimConnect() as sc: ... `
-      self.sc = SimConnect()
+      self.sc = simconnect.SimConnect(poll_interval_seconds=0.042)
       
       
       # subscribing to one or more variables is much more efficient,
@@ -58,7 +59,7 @@ class Sim():
       self.datadef = self.sc.subscribe_simdata(
           varList,
           # request an update every ten rendered frames
-          period=PERIOD_VISUAL_FRAME,
+          period=simconnect.PERIOD_VISUAL_FRAME,
           interval=1,
       )
       # track the most recent data update
@@ -93,7 +94,7 @@ class Sim():
       acelZ = self.datadef.simdata["ACCELERATION BODY Z"]
       acel2 = math.sqrt(acelX*acelX+acelZ*acelZ)
       acelY = self.datadef.simdata["ACCELERATION BODY Y"]
-      acel = math.sqrt(acelY*acelY+acel2*acel2)
+      acel = math.sqrt(acelY*acelY+acel2*acel2) * 0.3048
       if (self.lastAcel is not None):
         acelChange = abs(acel - self.lastAcel)
         impactForce = (acelChange - self.accelThreshold) / 50.0
@@ -145,7 +146,6 @@ class Sim():
       gearPos = self.datadef.simdata["GEAR LEFT POSITION"]
       if (self.lastGearPos is not None):
         gearChange = abs(gearPos - self.lastGearPos)
-        print(gearChange)
       self.lastGearPos = gearPos
       
       if (flapsChange > 0.005) or (gearChange > 0.005):
@@ -165,6 +165,7 @@ class Sim():
       self.sc.Close()
       self.sc = None
       self.datadef = None
+      #del sys.modules["simconnect"]
     return ("msfsBHap stopped\n", "valid")
 
 if __name__ == "__main__": 
