@@ -12,7 +12,7 @@ maxRpm   = 2300
 ```
 
 
-## Yak 1b Ser 127
+## Yak 1 Se69 & Yak 1b Se127 / Yak 7B Se36
 
 ```
 speedThreshold = 75
@@ -21,7 +21,16 @@ maxSpeed = 720
 maxRpm   = 2700
 ```
 
-## Tempest Mk6 Ser 2
+## P-39L-1
+
+```
+speedThreshold = 75
+rpmThreshold = 86
+maxSpeed = 840
+maxRpm   = 3000
+```
+
+## Tempest Mk.V Ser 2
 
 ```
 speedThreshold = 75
@@ -48,7 +57,16 @@ maxSpeed = 570
 maxRpm   = 2150
 ```
 
-## Pe-2 Ser87
+## IL-2 1943
+
+```
+speedThreshold = 75
+rpmThreshold = 87
+maxSpeed = 570
+maxRpm   = 2350
+```
+
+## Pe-2 Se35/Se87
 
 ```
 speedThreshold = 75
@@ -75,12 +93,39 @@ maxSpeed = 850
 maxRpm   = 2600
 ```
 
-## BF-109 G4
+## BF-109 G4/G14
 
 ```
 speedThreshold = 75
 rpmThreshold = 82
 maxSpeed = 850
+maxRpm   = 2800
+```
+
+## BF-109 K4
+
+```
+speedThreshold = 75
+rpmThreshold = 86
+maxSpeed = 850
+maxRpm   = 2800
+```
+
+## BF-110 E2
+
+```
+speedThreshold = 75
+rpmThreshold = 91
+maxSpeed = 740
+maxRpm   = 2400
+```
+
+## BF-110 G2
+
+```
+speedThreshold = 75
+rpmThreshold = 82
+maxSpeed = 740
 maxRpm   = 2800
 ```
 
@@ -91,6 +136,15 @@ speedThreshold = 75
 rpmThreshold = 85
 maxSpeed = 850
 maxRpm   = 2700
+```
+
+## Ju-87 D-3 (Stuka)
+
+```
+speedThreshold = 75
+rpmThreshold = 86
+maxSpeed = 650
+maxRpm   = 2600
 ```
 
 ## Sopwith Camel
