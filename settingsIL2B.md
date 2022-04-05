@@ -39,6 +39,17 @@ maxSpeed = 870
 maxRpm   = 3700
 ```
 
+## Spitfire Mk.IXe
+
+```
+speedThreshold = 75
+rpmThreshold = 94
+aoaThreshold = 75
+maxSpeed = 725
+maxRpm   = 3000
+maxAoA   = 1
+```
+
 ## P-38J-25
 
 ```

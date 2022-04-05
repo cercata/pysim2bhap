@@ -7,13 +7,16 @@ In order to work, you'll need to enable [SimConnect](https://docs.flightsimulato
 
 This uses the excelent package [pysimconnect](https://github.com/patricksurry/pysimconnect) from @patricksurry to get the data from de sim.
 
-Actually it supports 5 patterns in the Vest:
+Actually it supports 6 patterns in the Vest:
 
-- When the plane aproaches non exceed speed, my back starts vibrating gradually.
-- When the RPM exceed 95%, my chest starts vibrating gradually
-- When G's exceed 3, my belly starts vibrating gradually
-- When acceleration changes to quickly (impact?), all vibrates
+- When the plane aproaches non exceed speed, my upper back starts vibrating gradually.
+- When the plane aproaches maximum angle of Attack, my lower back starts vibrating gradually.
+- When the RPM exceed threshold, my chest starts vibrating gradually
+- When G's exceed threshold, my belly starts vibrating gradually
+- When acceleration changes to quickly , all the vest vibrates
 - Vibration when flaps and landing gear are moving
+
+[Recomended settings for several MSFS planes](settingsMSFS.md)
 
 ![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
 
@@ -37,12 +40,13 @@ You need to enable UDP motion and telemetry data adding this to your `data\start
 [END]
 ```
 
-Actually it supports 6 patterns in the Vest:
+Actually it supports 7 patterns in the Vest:
 
-- When the plane aproaches non exceed speed, my back starts vibrating gradually.
-- When the RPM exceed 95%, my chest starts vibrating gradually
-- When G's exceed 3, my belly starts vibrating gradually
-- When acceleration changes to quickly (impact?), all vibrates
+- When the plane aproaches non exceed speed, my upper back starts vibrating gradually.
+- When the plane aproaches maximum angle of Attack, my lower back starts vibrating gradually.
+- When the RPM exceed threshold, my chest starts vibrating gradually
+- When G's exceed threshold, my belly starts vibrating gradually
+- When acceleration changes to quickly , all the vest vibrates
 - Vibration when flaps and landing gear are moving
 - Vibration when you fire the gun or cannons, and when you get hit
 

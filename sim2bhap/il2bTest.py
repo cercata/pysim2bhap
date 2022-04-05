@@ -52,7 +52,7 @@ while True:
     if dataLen == 44:
       listMotion = structMotion.unpack(msg[0])
       msg = "Motion {}".format(str(listMotion))
-      print("Acel: {} {} {}".format(listMotion[8],listMotion[9],listMotion[10]))
+      #print("Acel: {} {} {}".format(listMotion[8],listMotion[9],listMotion[10]))
     elif dataLen >= lenTelem:
       counter+= 1
       #os.system('cls')
@@ -76,7 +76,7 @@ while True:
                 else:
                   diffDict[i] += 1
         prevMsg = msg
-      if False:
+      if True:
        if counter % 5 == 3:
          os.system('cls')
          for pos in posToPrint:
@@ -97,7 +97,7 @@ while True:
            print ("  Pos {}: {} ".format(pos, value))
          for pos in posToPrintB:
            print ("  Pos {}: {} ".format(pos, msg[0][pos]))
-      if True:
+      if False:
         if len(msg[0]) > lenTelem:
           print (" Packet len {} -> EndCode {}".format(len(msg[0]), msg[0][130]))
     time.sleep(0.001)

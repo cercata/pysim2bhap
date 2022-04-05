@@ -47,6 +47,7 @@ class Sim():
       self.player.register("msfs_arpm", "msfs_arpm.tact")
       self.player.register("msfs_vace", "msfs_vace.tact")
       self.player.register("msfs_vfla", "msfs_vfla.tact")
+      self.player.register("msfs_vaoa", "msfs_vaoa.tact")
       # open a connection to the SDK
       # or use as a context via `with SimConnect() as sc: ... `
       self.sc = simconnect.SimConnect(poll_interval_seconds=0.042)
@@ -111,22 +112,32 @@ class Sim():
    
       #self.latest = self.datadef.simdata.latest()
    
+      onGround = self.datadef.simdata["SIM ON GROUND"]
+      aoa = self.datadef.simdata["INCIDENCE ALPHA"] * 57.2958
+      aoaVibration = ((aoa/self.maxAoA) - self.aoaThreshold) / (1 - self.aoaThreshold)
+      #print ("{} {} {}".format(onGround, aoa, aoaVibration))
+      if (not onGround) and (aoaVibration > 0.01):
+        msg += "AoA {} {}\n".format(aoaVibration, aoa)
+        if self.fullArms:
+          self.play("msfs_arpm", aoaVibration, "alt3")
+        self.play("msfs_vaoa", aoaVibration, "alt4")
+        
       speedVibration = (self.datadef.simdata["AIRSPEED MACH"]/self.datadef.simdata["BARBER POLE MACH"]) - self.speedThreshold
       if (speedVibration > 0):
         speedVibration = speedVibration * speedVibration * 4
         if (speedVibration > 0.01):
           msg += "SPEED {} {}\n".format(speedVibration, self.datadef.simdata["AIRSPEED MACH"])
           if self.fullArms:
-            self.play("msfs_arpm", speedVibration, "alt3")
-          self.play("msfs_vvne", speedVibration, "alt4")
+            self.play("msfs_arpm", speedVibration, "alt5")
+          self.play("msfs_vvne", speedVibration, "alt6")
                       
       engineVibration = self.datadef.simdata["GENERAL ENG PCT MAX RPM:1"]/100 - self.rpmThreshold
       if (engineVibration > 0):
         engineVibration = engineVibration * engineVibration * 4
         if (engineVibration > 0.01):
           msg += "RPM {} {}\n".format(engineVibration, self.datadef.simdata["GENERAL ENG PCT MAX RPM:1"])
-          self.play("msfs_arpm", engineVibration, "alt5")
-          self.play("msfs_vrpm", engineVibration, "alt6")
+          self.play("msfs_arpm", engineVibration, "alt7")
+          self.play("msfs_vrpm", engineVibration, "alt8")
    
       gForceVibration = (self.datadef.simdata["G FORCE"] - self.gfeThreshold) / 8
       if (gForceVibration > 0):
@@ -134,8 +145,8 @@ class Sim():
         if (gForceVibration > 0.01):
           msg += "GFe {} {}\n".format(gForceVibration, self.datadef.simdata["G FORCE"])
           if self.fullArms:
-            self.play("msfs_arpm", gForceVibration, "alt7")
-          self.play("msfs_vgfe", gForceVibration, "alt8")
+            self.play("msfs_arpm", gForceVibration, "alt9")
+          self.play("msfs_vgfe", gForceVibration, "alt10")
 
       flapsChange = 0
       flapPos = self.datadef.simdata["TRAILING EDGE FLAPS LEFT PERCENT"]
@@ -152,8 +163,8 @@ class Sim():
       if (flapsChange > 0.005) or (gearChange > 0.005):
         msg += "Flp {} {} {} {}\n".format(flapsChange, flapPos, gearChange, gearPos)
         if self.fullArms:
-          self.play("msfs_arpm", 0.1, "alt9") 
-        self.play("msfs_vfla", 0.5, "alt10") 
+          self.play("msfs_arpm", 0.1, "alt11") 
+        self.play("msfs_vfla", 0.5, "alt12") 
 
     except Exception as excp:
       errCode = 'error'
@@ -165,6 +176,7 @@ class Sim():
     if self.sc:
       self.sc.Close()
       self.sc = None
+      del self.sc
       self.datadef = None
       #del sys.modules["simconnect"]
     return ("msfsBHap stopped\n", "valid")
