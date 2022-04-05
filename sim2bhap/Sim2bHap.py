@@ -16,9 +16,11 @@ port = 500
 activeSim = 'MSFS'
 speedThreshold = 75
 rpmThreshold = 95  
+aoaThreshold = 75
 gfeThreshold = 3
 maxSpeed = 700
 maxRpm = 3000
+maxAoA   = 20
 fullArms = False
 accelThreshold = 0.5
 forceMultiplier = 1.0
@@ -103,9 +105,11 @@ def runFunc():
     port    = int(portEntry.get())
     speedThreshold = float(speedEntry.get())/100
     rpmThreshold   = float(rpmEntry.get())/100
+    aoaThreshold   = float(aoaEntry.get())/100
     gfeThreshold   = float(gfeEntry.get())
     maxSpeed       = float(maxSpeedEntry.get())
     maxRpm         = float(maxRpmEntry.get())
+    maxAoA         = float(maxAoAEntry.get())
     fullArms       = varArms.get()
     accelThreshold  = float(accelEntry.get())
     forceMultiplier = float(multiEntry.get())
@@ -125,11 +129,13 @@ def runFunc():
     if run:
       sim.speedThreshold = speedThreshold
       sim.rpmThreshold   = rpmThreshold
+      sim.aoaThreshold   = aoaThreshold
       sim.gfeThreshold   = gfeThreshold
       sim.fullArms       = fullArms
       sim.accelThreshold  = accelThreshold
       sim.maxSpeed       = maxSpeed
-      sim.maxRpm         = maxRpm 
+      sim.maxRpm         = maxRpm
+      sim.maxAoA         = maxAoA
       sim.forceMultiplier= forceMultiplier
       sim.durationMultiplier = durationMultiplier
       output = sim.start()
@@ -246,12 +252,16 @@ if __name__ == "__main__":
           speedThreshold = parser.getfloat('values','speedThreshold')
         if parser.has_option('values','rpmThreshold'):
           rpmThreshold = parser.getfloat('values','rpmThreshold')
+        if parser.has_option('values','aoaThreshold'):
+          aoaThreshold = parser.getfloat('values','aoaThreshold')
         if parser.has_option('values','gfeThreshold'):
           gfeThreshold = parser.getfloat('values','gfeThreshold')
         if parser.has_option('values','maxSpeed'):
           maxSpeed = parser.getfloat('values','maxSpeed')
         if parser.has_option('values','maxRpm'):
           maxRpm = parser.getfloat('values','maxRpm')
+        if parser.has_option('values','maxAoA'):
+          maxAoA = parser.getfloat('values','maxAoA')
         if parser.has_option('values','fullArms'):
           fullArms = parser.getboolean('values','fullArms')
         if parser.has_option('values','accelThreshold'):
@@ -326,16 +336,22 @@ if __name__ == "__main__":
     f1_0 = Frame(f1, relief=SUNKEN, width = "500")
     
     speedLabel = Label(f1_0, text="Speed Threshold (%): ")
-    speedLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
+    speedLabel.grid(row=1, column=0, padx=(10,2), pady=3, sticky=W)
     speedEntry = Entry(f1_0, width=10)
-    speedEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
+    speedEntry.grid(row=1, column=1, padx=2, pady=(10,6), sticky=W)
     speedEntry.insert(0,str(speedThreshold))
 
     rpmLabel = Label(f1_0, text="RPM Threshold (%): ")
-    rpmLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
+    rpmLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
     rpmEntry = Entry(f1_0, width=10)
-    rpmEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
+    rpmEntry.grid(row=2, column=1, padx=2, pady=(6,6), sticky=W)
     rpmEntry.insert(0,str(rpmThreshold))
+    
+    aoaLabel = Label(f1_0, text="AoA Threshold (%): ")
+    aoaLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
+    aoaEntry = Entry(f1_0, width=10)
+    aoaEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
+    aoaEntry.insert(0,str(aoaThreshold))
 
     gfeLabel = Label(f1_0, text="G Force Threshold (Gs): ")
     gfeLabel.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
@@ -349,16 +365,22 @@ if __name__ == "__main__":
     f1_1 = Frame(f1, relief=SUNKEN)
     
     maxSpeedLabel = Label(f1_1, text="Max Speed(Kmh): ")
-    maxSpeedLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
+    maxSpeedLabel.grid(row=1, column=0, padx=(10,2), pady=3, sticky=W)
     maxSpeedEntry = Entry(f1_1, width=10)
-    maxSpeedEntry.grid(row=2, column=1, padx=2, pady=(10,6), sticky=W)
+    maxSpeedEntry.grid(row=1, column=1, padx=2, pady=(10,6), sticky=W)
     maxSpeedEntry.insert(0,maxSpeed)
 
     maxRpmLabel = Label(f1_1, text="Max RPM: ")
-    maxRpmLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
+    maxRpmLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
     maxRpmEntry = Entry(f1_1, width=10)
-    maxRpmEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
+    maxRpmEntry.grid(row=2, column=1, padx=2, pady=(6,6), sticky=W)
     maxRpmEntry.insert(0,maxRpm)
+    
+    maxAoALabel = Label(f1_1, text="Max AoA(º): ")
+    maxAoALabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)
+    maxAoAEntry = Entry(f1_1, width=10)
+    maxAoAEntry.grid(row=3, column=1, padx=2, pady=(6,6), sticky=W)
+    maxAoAEntry.insert(0,maxAoA)
 
     accelLabel = Label(f1_1, text="Accel. Threshold (m/s2): ")
     accelLabel.grid(row=4, column=0, padx=(10,2), pady=3, sticky=W)
