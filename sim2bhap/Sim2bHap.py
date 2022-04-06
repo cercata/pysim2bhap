@@ -25,12 +25,15 @@ fullArms = False
 accelThreshold = 0.5
 forceMultiplier = 1.0
 durationMultiplier = 1.0
+iconFile = 'mini_plane.ico'
 #########################################
 
 import os, sys, os.path
 import time
 import traceback
 import configparser
+import base64
+
 #import simconnect
 
 from tkinter import *
@@ -327,6 +330,11 @@ if __name__ == "__main__":
     root =Tk()
     root.title(windowTitle)
     root.protocol("WM_DELETE_WINDOW", exit_program)
+
+    try:
+      root.wm_iconbitmap(iconFile)
+    except:
+      log.exception('Error setting ico file')      
 
     f0 = Frame(root)
      
