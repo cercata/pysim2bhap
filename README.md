@@ -16,8 +16,6 @@ Actually it supports 6 patterns in the Vest:
 - When acceleration changes to quickly , all the vest vibrates
 - Vibration when flaps and landing gear are moving
 
-[Recomended settings for several MSFS planes](settingsMSFS.md)
-
 ![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
 
 ## IL2 Battle of Series
@@ -49,7 +47,5 @@ Actually it supports 7 patterns in the Vest:
 - When acceleration changes to quickly , all the vest vibrates
 - Vibration when flaps and landing gear are moving
 - Vibration when you fire the gun or cannons, and when you get hit
-
-[Recomended settings for several IL2B planes](settingsIL2B.md)
 
 ![Sim2bHapIL2 screenshot](/assets/images/Sim2bHapIL2.png)
