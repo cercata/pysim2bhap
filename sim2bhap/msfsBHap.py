@@ -7,6 +7,8 @@ import time
 import math
 import traceback
 import simconnect
+import logging as log
+
 
 varList = ["GENERAL ENG PCT MAX RPM:1", "AIRSPEED MACH", "BARBER POLE MACH",
            "ACCELERATION BODY X", "ACCELERATION BODY Y", "ACCELERATION BODY Z", 
@@ -45,13 +47,19 @@ class Sim():
       #player.initialize()
       
       # tact file can be exported from bhaptics designer
-      self.player.register("msfs_vvne", "msfs_vvne.tact")
-      self.player.register("msfs_vrpm", "msfs_vrpm.tact")
-      self.player.register("msfs_vgfe", "msfs_vgfe.tact")
-      self.player.register("msfs_arpm", "msfs_arpm.tact")
-      self.player.register("msfs_vace", "msfs_vace.tact")
-      self.player.register("msfs_vfla", "msfs_vfla.tact")
-      self.player.register("msfs_vaoa", "msfs_vaoa.tact")
+      try:
+        self.player.register("msfs_vvne", "msfs_vvne.tact")
+        self.player.register("msfs_vrpm", "msfs_vrpm.tact")
+        self.player.register("msfs_vgfe", "msfs_vgfe.tact")
+        self.player.register("msfs_arpm", "msfs_arpm.tact")
+        self.player.register("msfs_vace", "msfs_vace.tact")
+        self.player.register("msfs_vfla", "msfs_vfla.tact")
+        self.player.register("msfs_vaoa", "msfs_vaoa.tact")
+      except:
+        msg = 'Error conecting. Is bHaptics player app running?\n'
+        log.exception(msg)
+        return (msg, 'error')
+      
       # open a connection to the SDK
       # or use as a context via `with SimConnect() as sc: ... `
       self.sc = simconnect.SimConnect(poll_interval_seconds=0.042)
@@ -103,7 +111,7 @@ class Sim():
       acel = math.sqrt(acelY*acelY+acel2*acel2) * 0.3048
       if (self.lastAcel is not None):
         acelChange = abs(acel - self.lastAcel)
-        impactForce = (acelChange - self.accelThreshold) / 50.0
+        impactForce = (acelChange - self.accelThreshold) / 20.0
       self.lastAcel = acel
       
       if impactForce > 0.01:
