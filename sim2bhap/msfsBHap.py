@@ -17,11 +17,15 @@ class Sim():
   def __init__(self, port = 500, ipAddr = '127.0.0.1'):
     self.speedThreshold = 0.75
     self.rpmThreshold = 0.95
-    self.gfeThreshold = 3
+    self.gfeThreshold = 2.6
     self.fullArms = False
-    self.accelThreshold = 0.5
+    self.accelThreshold = 0.75
+    self.maxSpeed = 700.0
+    self.maxRpm = 3000.0
+    self.aoaThreshold = 0.75
+    self.maxAoA = 20
     self.forceMultiplier = 1.0
-    self.durationMultiplier = 1.0
+    self.durationMultiplier = 1.0  
     self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname, duration = 1):

@@ -192,6 +192,49 @@ def tacopyall():
 
 def popup(event):
   menu.post(event.x_root, event.y_root)
+  
+valuesVarlist = ['activeSim', 'speedThreshold', 'rpmThreshold', 'aoaThreshold', 'gfeThreshold', 
+   'maxSpeed', 'maxRpm', 'maxAoA', 'fullArms', 'accelThreshold', 'forceMultiplier', 'durationMultiplier']
+def loadVars(altSection = ""):
+  for varName in valuesVarlist:
+    if altSection and parser.has_option(altSection, varName):
+      section = altSection
+    elif parser.has_option('values', varName):
+      section = 'values'
+    else:
+      continue
+    #print ("{} {}".format(section,varName))
+    if varName in ('activeSim',):
+      globals()[varName] = parser.get(section,varName).strip()
+    elif varName in ('fullArms',):
+      globals()[varName] = parser.getboolean(section,varName)
+    else:
+      globals()[varName] = parser.getfloat(section,varName)
+      
+def setEntry(entry, value):
+  entry.delete(0, END)
+  entry.insert(0, value)
+      
+def loadPreset(event = None):
+  section = presetCombo.get()
+  loadVars (section)
+  try:
+    simCombo.current(simCombo['values'].index(activeSim))
+  except:
+    simCombo.current(0)
+   
+  setEntry(speedEntry, str(speedThreshold))
+  setEntry(rpmEntry, str(rpmThreshold))
+  setEntry(aoaEntry ,str(aoaThreshold))
+  setEntry(gfeEntry, str(gfeThreshold))
+  setEntry(maxSpeedEntry, str(maxSpeed))
+  setEntry(maxRpmEntry, str(maxRpm))
+  setEntry(maxAoAEntry, str(maxAoA))
+  setEntry(accelEntry, str(accelThreshold))
+  setEntry(multiEntry, str(forceMultiplier))
+  setEntry(multi2Entry, str(durationMultiplier))
+  varArms.set(fullArms)
+
 
 if __name__ == "__main__": 
 
@@ -223,8 +266,13 @@ if __name__ == "__main__":
     windowTitle = windowTitleBase
     parser = configparser.ConfigParser()
     parser.read(configFile)
+    
+    presetList = []
 
     try:
+      for section in parser.sections():
+        if section not in ('window', 'host', 'values'):
+          presetList.append(section)
       if parser.has_section('window'):
         if parser.has_option('window', 'font'):  
           fuente = eval(parser.get('window', 'font'))
@@ -246,30 +294,31 @@ if __name__ == "__main__":
         if parser.has_option('host','port'):
           port = parser.getint('host','port')
       if parser.has_section('values'):
-        if parser.has_option('values','activeSim'):
-          activeSim = parser.get('values','activeSim').strip()
-        if parser.has_option('values','speedThreshold'):
-          speedThreshold = parser.getfloat('values','speedThreshold')
-        if parser.has_option('values','rpmThreshold'):
-          rpmThreshold = parser.getfloat('values','rpmThreshold')
-        if parser.has_option('values','aoaThreshold'):
-          aoaThreshold = parser.getfloat('values','aoaThreshold')
-        if parser.has_option('values','gfeThreshold'):
-          gfeThreshold = parser.getfloat('values','gfeThreshold')
-        if parser.has_option('values','maxSpeed'):
-          maxSpeed = parser.getfloat('values','maxSpeed')
-        if parser.has_option('values','maxRpm'):
-          maxRpm = parser.getfloat('values','maxRpm')
-        if parser.has_option('values','maxAoA'):
-          maxAoA = parser.getfloat('values','maxAoA')
-        if parser.has_option('values','fullArms'):
-          fullArms = parser.getboolean('values','fullArms')
-        if parser.has_option('values','accelThreshold'):
-          accelThreshold = parser.getfloat('values','accelThreshold')
-        if parser.has_option('values','forceMultiplier'):
-          forceMultiplier = parser.getfloat('values','forceMultiplier')
-        if parser.has_option('values','durationMultiplier'):
-          durationMultiplier = parser.getfloat('values','durationMultiplier')
+        loadVars()
+        #if parser.has_option('values','activeSim'):
+        #  activeSim = parser.get('values','activeSim').strip()
+        #if parser.has_option('values','speedThreshold'):
+        #  speedThreshold = parser.getfloat('values','speedThreshold')
+        #if parser.has_option('values','rpmThreshold'):
+        #  rpmThreshold = parser.getfloat('values','rpmThreshold')
+        #if parser.has_option('values','aoaThreshold'):
+        #  aoaThreshold = parser.getfloat('values','aoaThreshold')
+        #if parser.has_option('values','gfeThreshold'):
+        #  gfeThreshold = parser.getfloat('values','gfeThreshold')
+        #if parser.has_option('values','maxSpeed'):
+        #  maxSpeed = parser.getfloat('values','maxSpeed')
+        #if parser.has_option('values','maxRpm'):
+        #  maxRpm = parser.getfloat('values','maxRpm')
+        #if parser.has_option('values','maxAoA'):
+        #  maxAoA = parser.getfloat('values','maxAoA')
+        #if parser.has_option('values','fullArms'):
+        #  fullArms = parser.getboolean('values','fullArms')
+        #if parser.has_option('values','accelThreshold'):
+        #  accelThreshold = parser.getfloat('values','accelThreshold')
+        #if parser.has_option('values','forceMultiplier'):
+        #  forceMultiplier = parser.getfloat('values','forceMultiplier')
+        #if parser.has_option('values','durationMultiplier'):
+        #  durationMultiplier = parser.getfloat('values','durationMultiplier')
           
     except:
       log.exception('Error reading configuration file')
@@ -283,7 +332,7 @@ if __name__ == "__main__":
      
     simLabel = Label(f0, text="Sim:")
     simLabel.grid(row=0, column=0, padx=1, pady=2, sticky=W)
-    simCombo = Combobox(f0, width=12)
+    simCombo = Combobox(f0, width=12, state="readonly")
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
     simCombo['values']=['MSFS', 'IL2BoX']
@@ -328,9 +377,21 @@ if __name__ == "__main__":
     verbose= Checkbutton(f0, text="Verbose", variable = varVerbose, onvalue = 1, offvalue = 0)
     verbose.grid(row=0, column=13, columnspan=2, padx=2, pady=5, sticky=W)
     
-    f0.pack(side=TOP, fill=X, padx=5, pady=(7,1))
+    f0.pack(side=TOP, fill=X, padx=5, pady=(1,1))
     
-    configEleList = []
+    f0bis = Frame(root)
+    presetLabel = Label(f0bis, text="Preset:")
+    presetLabel.grid(row=0, column=0, padx=1, pady=2, sticky=W)
+    presetCombo = Combobox(f0bis, width=24, state="readonly", height=24)
+    presetCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
+    presetCombo['values']=["Default"] + sorted(presetList)
+    presetCombo.bind("<<ComboboxSelected>>", loadPreset)
+    
+    presetBtn = Button(f0bis, text="LOAD", command=loadPreset)
+    presetBtn.grid(row=0, column=2, padx=(10,2), pady=2, sticky=W)
+    
+    f0bis.pack(side=TOP, fill=X, padx=5, pady=(7,1))
+    
     f1 = Frame(root)
 
     f1_0 = Frame(f1, relief=SUNKEN, width = "500")
