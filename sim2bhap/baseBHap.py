@@ -90,7 +90,7 @@ class BaseSim():
         impactForce = (self.accelChange - self.accelThreshold) / 20.0
         
         if impactForce >= 0.01:
-          msg += "Acc {} {}\n".format(impactForce, accelChange)
+          msg += "Acc {} {}\n".format(impactForce, self.accelChange)
           self.play("msfs_arpm", impactForce, "alt1") 
           self.play("msfs_vace", impactForce, "alt2") 
      
