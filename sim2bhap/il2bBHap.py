@@ -23,11 +23,11 @@ structFloat = [None, structFloat1, structFloat2, structFloat3, structFloat4]
 
 class Sim(baseBHap.BaseSim):
   def __init__(self, port = 29373, ipAddr = '127.0.0.1'):
+    baseBHap.BaseSim.__init__(self, port, ipAddr)
     self.s = None
     self.lastPacket = 0
     self.motionTick = None
     self.acc = None
-    baseBHap.BaseSim.__init__(self, port, ipAddr)
     
   def parseMotion(self, buff):
     (motionTick, _, _, _, _, _, _, accX, accY, accZ) = structMotion.unpack(buff[0:40])

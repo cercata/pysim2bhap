@@ -15,12 +15,12 @@ refloatList = re.compile("-?\d+\.\d+")
 
 class Sim(baseBHap.BaseSim):
   def __init__(self, port = 29373, ipAddr = '127.0.0.1'):
+    baseBHap.BaseSim.__init__(self, port, ipAddr)
     self.s = None
     self.lastPacket = 0
     self.simTime = None
     self.acc = None
     self.shells = None
-    baseBHap.BaseSim.__init__(self, port, ipAddr)
     
     
   def parseTelem(self, floatList):
@@ -46,7 +46,7 @@ class Sim(baseBHap.BaseSim):
       
     self.rpmPerc = float(floatList[25]) / 100.0
     self.alt = float(floatList[17])
-    self.gear = float(floatList[18])
+    self.gear = float(floatList[19])
     sum([float(floatList[13]), float(floatList[15]), float(floatList[16])])
     self.onGround = sum([float(floatList[13]), float(floatList[15]), float(floatList[16])]) > 0.01
     self.speed = float(floatList[23]) * 3.6

@@ -26,6 +26,8 @@ class BaseSim():
     self.maxAoA = 20
     self.forceMultiplier = 1.0
     self.durationMultiplier = 1.0
+    self.ignoreFlaps = False
+    self.fullArms = False
     self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname, duration = 1):
@@ -139,7 +141,8 @@ class BaseSim():
 
       flapsChange = 0
       flapPos = None
-      if hasattr(self, "flaps"):
+      
+      if (not self.ignoreFlaps) and hasattr(self, "flaps"):
         flapPos = self.flaps
         if (self.lastFlapPos is not None):
           flapsChange = abs(flapPos - self.lastFlapPos)
@@ -147,7 +150,7 @@ class BaseSim():
 
       gearChange  = 0
       gearPos = None
-      if hasattr(self, "flaps"):
+      if hasattr(self, "gear"):
         gearPos = self.gear
         if (self.lastGearPos is not None):
           gearChange = abs(gearPos - self.lastGearPos)

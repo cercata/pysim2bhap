@@ -127,6 +127,7 @@ def runFunc():
       try:
         import DCSBHap
         sim = DCSBHap.Sim(port, ipAddr)
+        sim.ignoreFlaps = True
       except:
         sim = dummySim(port, ipAddr)
     else:
