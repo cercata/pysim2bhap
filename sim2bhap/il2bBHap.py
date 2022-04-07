@@ -145,7 +145,7 @@ class Sim():
         self.player.register("msfs_vfla", "msfs_vfla.tact")
         self.player.register("msfs_vaoa", "msfs_vaoa.tact")
       except:
-        msg = 'Is bHaptics player app running\n'
+        msg = 'Error conecting. Is bHaptics player app running?\n'
         log.exception(msg)
         return (msg, 'error')
       
