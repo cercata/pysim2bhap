@@ -125,8 +125,8 @@ def runFunc():
       sim = il2bBHap.Sim(port, ipAddr)
     elif simName == 'DCS':
       try:
-        import dcs2bBHap
-        sim = dcs2bBHap.Sim(port, ipAddr)
+        import DCSBHap
+        sim = DCSBHap.Sim(port, ipAddr)
       except:
         sim = dummySim(port, ipAddr)
     else:

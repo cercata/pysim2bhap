@@ -136,11 +136,11 @@ function Sim2bHap_Callabacks.onSimulationFrame()
     mechInfo.gear.value,                      -- 19 = Delployed landing gear (%)
     mechInfo.speedbrakes.value,               -- 20 = Speed brakes (%)
     mechInfo.canopy.value,                    -- 21 = Canopy open (%)
-    Export.LoGetAngleOfAttack(),              -- 22 = Angle of attack
+    Export.LoGetAngleOfAttack(),              -- 22 = Angle of attack (degrees)
     Export.LoGetIndicatedAirSpeed(),          -- 23 = Indicated Air Speed (m/s)
-	payloadInfo.Cannon.shells,                -- 24 = Current sells in the cannon
-	engine.RPM.left,                          -- 25 = Left Engine RPM
-	engine.RPM.right,                         -- 26 = Right Engine RPM
+    payloadInfo.Cannon.shells,                -- 24 = Current sells in the cannon
+    engine.RPM.left,                          -- 25 = Left Engine RPM (%)
+    engine.RPM.right,                         -- 26 = Right Engine RPM (%)
     Export.LoGetModelTime()                   -- 27 = Time in seconds
     )))
 end

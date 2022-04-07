@@ -38,14 +38,14 @@ class BaseSim():
     raise Exception ('This was suppossed to be an abstract class')
     
     '''Must provide the follwing vars:
-    self.acc ? self.accelChange
-    self.rpm 
+    self.accelChange
+    self.rpm or self.rpmPerc
     self.alt (m)
     self.gear     = 1 - extended , 0 - retracted
     self.onGround = True if plane is on ground
     self.speed (kmh)
     self.aoa (deg)
-    self.g (m/s2)
+    self.g (Gs)
     self.flaps  = 1 - extended , 0 - retracted
     self.gun    = True if firing (must be set to false in runCycle
     self.cannon = True if firing (must be set to false in runCycle
@@ -117,11 +117,13 @@ class BaseSim():
             self.play("msfs_vvne", speedVibration, "alt6")
                       
       if hasattr(self, "rpm"):
-        engineVibration = self.rpm/self.maxRpm - self.rpmThreshold
+        self.rpmPerc = self.rpm/self.maxRpm
+      if hasattr(self, "rpmPerc"):
+        engineVibration = self.rpmPerc - self.rpmThreshold
         if (engineVibration > 0):
           engineVibration = engineVibration * engineVibration * 16
           if (engineVibration > 0.01):
-            msg += "RPM {} {}\n".format(engineVibration, self.rpm)
+            msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
             self.play("msfs_arpm", engineVibration, "alt7")
             self.play("msfs_vrpm", engineVibration, "alt8")
    
