@@ -49,3 +49,21 @@ Actually it supports 7 patterns in the Vest:
 - Vibration when you fire the gun or cannons, and when you get hit
 
 ![Sim2bHapIL2 screenshot](/assets/images/Sim2bHapIL2.png)
+
+## DCS World | Digital Combat Simulator
+
+You must place `DCS_To_bHap.lua` in the folder `C:\Users\YOUR USERNAME\Saved Games\DCS\Scripts\Hooks`. If the "Hooks" folder doen's exist, create it. 
+
+This wonderfull LUA script is based on the script from [FlyPT Mover](https://www.flyptmover.com/) by Pedro Antunes, just adding a couple of variables.
+
+Actually it supports 7 patterns in the Vest:
+
+- When the plane aproaches non exceed speed, my upper back starts vibrating gradually.
+- When the plane aproaches maximum angle of Attack, my lower back starts vibrating gradually.
+- When the RPM exceed threshold, my chest starts vibrating gradually
+- When G's exceed threshold, my belly starts vibrating gradually
+- When acceleration changes to quickly , all the vest vibrates
+- Vibration when flaps and landing gear are moving
+- Vibration when you fire the gun or cannons
+
+![Sim2bHapDCS screenshot](/assets/images/Sim2bHapDCS.png)
