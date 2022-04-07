@@ -121,9 +121,12 @@ def runFunc():
       import msfsBHap
       sim = msfsBHap.Sim(port, ipAddr)
     elif simName == 'IL2BoX':
+      import il2bBHap
+      sim = il2bBHap.Sim(port, ipAddr)
+    elif simName == 'DCS':
       try:
-        import il2bBHap
-        sim = il2bBHap.Sim(port, ipAddr)
+        import dcs2bBHap
+        sim = dcs2bBHap.Sim(port, ipAddr)
       except:
         sim = dummySim(port, ipAddr)
     else:
@@ -168,6 +171,7 @@ def runFunc():
           time.sleep(sleepTime)
       except:
         display_msg(traceback.format_exc(), tag = "error")
+        log.exception('')
         time.sleep(cycleTime*2)
     output = sim.stop()
     sim = None
@@ -177,6 +181,7 @@ def runFunc():
     sim = None
   
   except:
+    run = 0
     display_msg(traceback.format_exc(), tag = "error")
 
 def stopFunc():
@@ -217,6 +222,17 @@ def loadVars(altSection = ""):
 def setEntry(entry, value):
   entry.delete(0, END)
   entry.insert(0, value)
+
+def simSelected(event = None):
+  globals()['activeSim'] = simCombo.get()
+  updatePortToSim()
+
+def updatePortToSim():
+  try:
+    simPort = parser.getint("host", activeSim + "_port")
+    setEntry(portEntry, str(simPort))
+  except:
+    pass
       
 def loadPreset(event = None):
   section = presetCombo.get()
@@ -225,6 +241,8 @@ def loadPreset(event = None):
     simCombo.current(simCombo['values'].index(activeSim))
   except:
     simCombo.current(0)
+    
+  updatePortToSim()
    
   setEntry(speedEntry, str(speedThreshold))
   setEntry(rpmEntry, str(rpmThreshold))
@@ -343,7 +361,9 @@ if __name__ == "__main__":
     simCombo = Combobox(f0, width=12, state="readonly")
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
-    simCombo['values']=['MSFS', 'IL2BoX']
+    simCombo['values']=['MSFS', 'IL2BoX', 'DCS']
+    simCombo.bind("<<ComboboxSelected>>", simSelected)
+    
     try:
       simCombo.current(simCombo['values'].index(activeSim))
     except:
