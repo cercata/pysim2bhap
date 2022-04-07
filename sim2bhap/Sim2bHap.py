@@ -182,6 +182,7 @@ def runFunc():
   
   except:
     run = 0
+    connectedLabel['background'] = 'red'
     display_msg(traceback.format_exc(), tag = "error")
 
 def stopFunc():

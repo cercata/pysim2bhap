@@ -26,7 +26,6 @@ class BaseSim():
     self.maxAoA = 20
     self.forceMultiplier = 1.0
     self.durationMultiplier = 1.0
-    self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname, duration = 1):
     self.player.submit_registered_with_option(name, altname,
@@ -62,6 +61,8 @@ class BaseSim():
       
     # tact file can be exported from bhaptics designer
     try:
+      self.player = haptic_player.HapticPlayer()
+      
       self.player.register("msfs_vvne", "msfs_vvne.tact")
       self.player.register("msfs_vrpm", "msfs_vrpm.tact")
       self.player.register("msfs_vgfe", "msfs_vgfe.tact")

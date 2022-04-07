@@ -1,5 +1,6 @@
 import json
 from websocket import create_connection
+import logging as log
 
 # # send individual point for 1 seconds
 # dotFrame = {
@@ -35,11 +36,12 @@ from websocket import create_connection
 
 class HapticPlayer:
     def __init__(self):
+        self.ws = None
         try:
             self.ws = create_connection("ws://localhost:15881/v2/feedbacks")
         except:
-            print("Couldn't connect")
-            return
+            log.exception("Couldn't connect")
+            raise
 
     def register(self, key, file_directory):
         json_data = open(file_directory).read()
@@ -119,4 +121,5 @@ class HapticPlayer:
         self.submit(key, front_frame)
 
     def __del__(self):
-        self.ws.close()
+        if (self.ws):
+            self.ws.close()
