@@ -17,7 +17,6 @@ class Sim(baseBHap.BaseSim):
   def __init__(self, port = 29373, ipAddr = '127.0.0.1'):
     baseBHap.BaseSim.__init__(self, port, ipAddr)
     self.s = None
-    self.lastPacket = 0
     self.simTime = None
     self.acc = None
     self.shells = None

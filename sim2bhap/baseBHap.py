@@ -15,6 +15,7 @@ class BaseSim():
   def __init__(self, port = 29373, ipAddr = '127.0.0.1'):
     self.port = port
     self.ipAddr = ipAddr
+    self.lastPacket = 0
     self.speedThreshold = 0.75
     self.rpmThreshold = 0.95
     self.gfeThreshold = 2.6
@@ -94,7 +95,7 @@ class BaseSim():
         return (msg, errCode)
       
       if hasattr(self, "accelChange"):
-        impactForce = (self.accelChange - self.accelThreshold) / 20.0
+        impactForce = (self.accelChange - self.accelThreshold) / 20.0 + 0.0099
         
         if impactForce >= 0.01:
           msg += "Acc {} {}\n".format(impactForce, self.accelChange)

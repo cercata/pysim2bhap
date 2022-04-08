@@ -30,7 +30,10 @@ class Sim(baseBHap.BaseSim):
 
     # show data that's been changed since the last update
     #print(f"Updated data {self.datadef.simdata.changedsince(self.latest)}")
-
+    self.latest = self.datadef.simdata.latest()
+    if self.latest:
+      self.lastPacket = time.time()
+    
     impactForce = 0
     acelX = self.datadef.simdata["ACCELERATION BODY X"]
     acelZ = self.datadef.simdata["ACCELERATION BODY Z"]
@@ -79,7 +82,6 @@ class Sim(baseBHap.BaseSim):
           interval=1,
       )
       # track the most recent data update
-      #self.latest = self.datadef.simdata.latest()
       #print("Inferred variable units", self.datadef.get_units())
       msg = "msfsBHap started\n"
     except Exception as excp:
