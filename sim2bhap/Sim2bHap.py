@@ -21,8 +21,9 @@ gfeThreshold = 3
 maxSpeed = 700
 maxRpm = 3000
 maxAoA   = 20
-fullArms = False
 accelThreshold = 0.5
+fullArms = False
+ignoreFlaps = False
 forceMultiplier = 1.0
 durationMultiplier = 1.0
 iconFile = 'mini_plane.ico'
@@ -113,8 +114,9 @@ def runFunc():
     maxSpeed       = float(maxSpeedEntry.get())
     maxRpm         = float(maxRpmEntry.get())
     maxAoA         = float(maxAoAEntry.get())
-    fullArms       = varArms.get()
     accelThreshold  = float(accelEntry.get())
+    fullArms       = varArms.get()
+    ignoreFlaps    = varFlaps.get()
     forceMultiplier = float(multiEntry.get())
     durationMultiplier = float(multi2Entry.get())
     if simName == 'MSFS':
@@ -125,8 +127,8 @@ def runFunc():
       sim = il2bBHap.Sim(port, ipAddr)
     elif simName == 'DCS':
       try:
-        import dcs2bBHap
-        sim = dcs2bBHap.Sim(port, ipAddr)
+        import DCSBHap
+        sim = DCSBHap.Sim(port, ipAddr)
       except:
         sim = dummySim(port, ipAddr)
     else:
@@ -138,7 +140,8 @@ def runFunc():
       sim.aoaThreshold   = aoaThreshold
       sim.gfeThreshold   = gfeThreshold
       sim.fullArms       = fullArms
-      sim.accelThreshold  = accelThreshold
+      sim.ignoreFlaps    = ignoreFlaps
+      sim.accelThreshold = accelThreshold
       sim.maxSpeed       = maxSpeed
       sim.maxRpm         = maxRpm
       sim.maxAoA         = maxAoA
@@ -203,7 +206,7 @@ def popup(event):
   menu.post(event.x_root, event.y_root)
   
 valuesVarlist = ['activeSim', 'speedThreshold', 'rpmThreshold', 'aoaThreshold', 'gfeThreshold', 
-   'maxSpeed', 'maxRpm', 'maxAoA', 'fullArms', 'accelThreshold', 'forceMultiplier', 'durationMultiplier']
+   'maxSpeed', 'maxRpm', 'maxAoA', 'accelThreshold', 'fullArms', 'ignoreFlaps', 'forceMultiplier', 'durationMultiplier']
 def loadVars(altSection = ""):
   for varName in valuesVarlist:
     if altSection and parser.has_option(altSection, varName):
@@ -215,7 +218,7 @@ def loadVars(altSection = ""):
     #print ("{} {}".format(section,varName))
     if varName in ('activeSim',):
       globals()[varName] = parser.get(section,varName).strip()
-    elif varName in ('fullArms',):
+    elif varName in ('fullArms', 'ignoreFlaps'):
       globals()[varName] = parser.getboolean(section,varName)
     else:
       globals()[varName] = parser.getfloat(section,varName)
@@ -256,6 +259,7 @@ def loadPreset(event = None):
   setEntry(multiEntry, str(forceMultiplier))
   setEntry(multi2Entry, str(durationMultiplier))
   varArms.set(fullArms)
+  varFlaps.set(ignoreFlaps)
 
 
 if __name__ == "__main__": 
@@ -486,6 +490,11 @@ if __name__ == "__main__":
     arms= Checkbutton(f1_2, text="All in Arms", variable = varArms, onvalue = 1, offvalue = 0)
     arms.grid(row=1, column=0, columnspan=2, padx=(10,2), pady=5, sticky=W)
     varArms.set(fullArms)
+    
+    varFlaps = IntVar()
+    arms= Checkbutton(f1_2, text="Ignore Flaps", variable = varFlaps, onvalue = 1, offvalue = 0)
+    arms.grid(row=2, column=0, columnspan=2, padx=(10,2), pady=5, sticky=W)
+    varFlaps.set(ignoreFlaps)
     
     multiLabel = Label(f1_2, text="Force Multiplier: ")
     multiLabel.grid(row=3, column=0, padx=(10,2), pady=3, sticky=W)

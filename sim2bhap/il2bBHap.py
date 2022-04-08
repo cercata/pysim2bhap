@@ -20,14 +20,14 @@ structFloat2  = struct.Struct("<ff")
 structFloat3  = struct.Struct("<fff")
 structFloat4  = struct.Struct("<ffff")
 structFloat = [None, structFloat1, structFloat2, structFloat3, structFloat4]
-rad2Deg = 57.2958
-
 
 class Sim(baseBHap.BaseSim):
   def __init__(self, port = 29373, ipAddr = '127.0.0.1'):
+    baseBHap.BaseSim.__init__(self, port, ipAddr)
     self.s = None
     self.lastPacket = 0
-    baseBHap.BaseSim.__init__(self, port, ipAddr)
+    self.motionTick = None
+    self.acc = None
     
   def parseMotion(self, buff):
     (motionTick, _, _, _, _, _, _, accX, accY, accZ) = structMotion.unpack(buff[0:40])
@@ -65,7 +65,7 @@ class Sim(baseBHap.BaseSim):
       elif (varId == 6):
         self.speed = value[0] *3.6
       elif (varId == 7):
-        self.aoa = value[0] * rad2Deg
+        self.aoa = value[0] * baseBHap.rad2Deg
       elif (varId == 8):
         g1 = math.sqrt(value[0]*value[0]+value[1]*value[1])
         g2 = math.sqrt(value[2]*value[2]+g1*g1)
