@@ -18,7 +18,7 @@ Actually it supports 6 patterns in the Vest:
 
 ![Sim2bHap screenshot](/assets/images/Sim2bHap.png)
 
-## IL2 Battle of Series
+## IL-2 Sturmovik: Great Battles
 
 You need to enable UDP motion and telemetry data adding this to your `data\startup.cfg` file:
 

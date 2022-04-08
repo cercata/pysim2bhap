@@ -1,5 +1,4 @@
 import socket
-import struct
 import time
 import errno
 import haptic_player

@@ -126,10 +126,14 @@ def runFunc():
       import il2bBHap
       sim = il2bBHap.Sim(port, ipAddr)
     elif simName == 'DCS':
+      import DCSBHap
+      sim = DCSBHap.Sim(port, ipAddr)
+    elif simName == 'WThunder':
       try:
-        import DCSBHap
-        sim = DCSBHap.Sim(port, ipAddr)
+        import WThBHap
+        sim = WThBHap.Sim(port, ipAddr)
       except:
+        log.exception('')
         sim = dummySim(port, ipAddr)
     else:
       display_msg("Invalid sim\n", tag = "error")  
@@ -366,7 +370,7 @@ if __name__ == "__main__":
     simCombo = Combobox(f0, width=12, state="readonly")
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
-    simCombo['values']=['MSFS', 'IL2BoX', 'DCS']
+    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder']
     simCombo.bind("<<ComboboxSelected>>", simSelected)
     
     try:
