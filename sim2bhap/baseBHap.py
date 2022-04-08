@@ -38,14 +38,13 @@ class BaseSim():
   
   def recvData(self):
     raise Exception ('This was suppossed to be an abstract class')
-    
-    '''Must provide the follwing vars:
+    '''Must provide the follwing vars in the inherited class:
     self.accelChange
     self.rpm or self.rpmPerc
     self.alt (m)
     self.gear     = 1 - extended , 0 - retracted
     self.onGround = True if plane is on ground
-    self.speed (kmh)
+    self.speed (kmh) or self.speedPerc
     self.aoa (deg)
     self.g (Gs)
     self.flaps  = 1 - extended , 0 - retracted
@@ -53,6 +52,10 @@ class BaseSim():
     self.cannon = True if firing (must be set to false in runCycle
     self.hit    = True if impacted (must be set to false in runCycle
     '''
+    
+    
+  def runCycle(self):
+    raise Exception ('This was suppossed to be an abstract class')
 
   def start(self):
     self.cycle = 0
@@ -111,11 +114,13 @@ class BaseSim():
             self.play("msfs_vaoa", aoaVibration, "alt4")
                       
       if hasattr(self, "speed"):
-        speedVibration = (self.speed/self.maxSpeed) - self.speedThreshold
+        self.speedPerc = self.speed/self.maxSpeed
+      if hasattr(self, "speedPerc"):      
+        speedVibration = (self.speedPerc) - self.speedThreshold
         if (speedVibration > 0):
           speedVibration = speedVibration * speedVibration * 8
           if (speedVibration > 0.01):
-            msg += "SPEED {} {}\n".format(speedVibration, self.speed)
+            msg += "SPEED {} {}\n".format(speedVibration, self.speedPerc)
             if self.fullArms:
               self.play("msfs_arpm", speedVibration, "alt5")
             self.play("msfs_vvne", speedVibration, "alt6")
