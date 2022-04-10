@@ -36,7 +36,6 @@ class Sim(baseBHap.BaseSim):
         self.accelChange = abs(self.acc - self.prevAcc) / ((self.simTime - self.prevSimTime) * 50)
         
     if "weapon1" in varDict:
-      print (varDict["weapon1"])
       if varDict["weapon1"]:
         self.gun = 1
     if "weapon2" in varDict:
