@@ -67,3 +67,9 @@ Actually it supports 7 patterns in the Vest:
 - Vibration when you fire the gun or cannons
 
 ![Sim2bHapDCS screenshot](/assets/images/Sim2bHapDCS.png)
+
+# War Thunder
+
+The same patterns than DCS are supported. 
+
+No need to configure anything on the game, the game automatically exports data via an HTTP server on port 8111
