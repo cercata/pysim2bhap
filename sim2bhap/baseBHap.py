@@ -95,7 +95,7 @@ class BaseSim():
         return (msg, errCode)
       
       if hasattr(self, "accelChange"):
-        impactForce = (self.accelChange - self.accelThreshold) / 20.0 + 0.0099
+        impactForce = ((self.accelChange - self.accelThreshold) / 20.0 + 0.0099) * 2
         
         if impactForce >= 0.01:
           msg += "Acc {} {}\n".format(impactForce, self.accelChange)
@@ -119,7 +119,7 @@ class BaseSim():
       if hasattr(self, "speedPerc"):      
         speedVibration = (self.speedPerc) - self.speedThreshold
         if (speedVibration > 0):
-          speedVibration = speedVibration * speedVibration * 8
+          speedVibration = speedVibration * speedVibration * 24
           if (speedVibration > 0.01):
             msg += "SPEED {} {}\n".format(speedVibration, self.speedPerc)
             if self.fullArms:
@@ -131,17 +131,17 @@ class BaseSim():
       if hasattr(self, "rpmPerc"):
         engineVibration = self.rpmPerc - self.rpmThreshold
         if (engineVibration > 0):
-          engineVibration = engineVibration * engineVibration * 16
+          engineVibration = engineVibration * 3
           if (engineVibration > 0.01):
             msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
             self.play("msfs_arpm", engineVibration, "alt7")
             self.play("msfs_vrpm", engineVibration, "alt8")
    
       if hasattr(self, "g"):
-        gForceVibration = (self.g - self.gfeThreshold) / 8
-        if (gForceVibration > 0):
-          gForceVibration = gForceVibration * gForceVibration * 4
-          if (gForceVibration > 0.01):
+        gForceVibration = (self.g - self.gfeThreshold) / 4
+#        if (gForceVibration > 0):
+#          gForceVibration = gForceVibration * 8
+        if (gForceVibration > 0.01):
             msg += "GFe {} {}\n".format(gForceVibration, self.g)
             if self.fullArms:
               self.play("msfs_arpm", gForceVibration, "alt9")
@@ -167,8 +167,8 @@ class BaseSim():
       if (flapsChange > 0.005) or (gearChange > 0.005):
         msg += "Flp {} {} {} {}\n".format(flapsChange, flapPos, gearChange, gearPos)
         if self.fullArms:
-          self.play("msfs_arpm", 0.1, "alt11") 
-        self.play("msfs_vfla", 0.3, "alt12")
+          self.play("msfs_arpm", 0.2, "alt11") 
+        self.play("msfs_vfla", 0.6, "alt12")
 
       if self.gun or self.cannon or self.hit:
         if self.hit:
