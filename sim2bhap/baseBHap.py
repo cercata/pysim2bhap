@@ -95,7 +95,7 @@ class BaseSim():
         return (msg, errCode)
       
       if hasattr(self, "accelChange"):
-        impactForce = ((self.accelChange - self.accelThreshold) / 20.0 + 0.0099) * 2
+        impactForce = ((self.accelChange - self.accelThreshold) / 20.0) * 2 + 0.0099
         
         if impactForce >= 0.01:
           msg += "Acc {} {}\n".format(impactForce, self.accelChange)
@@ -117,25 +117,21 @@ class BaseSim():
       if hasattr(self, "speed"):
         self.speedPerc = self.speed/self.maxSpeed
       if hasattr(self, "speedPerc"):      
-        speedVibration = (self.speedPerc) - self.speedThreshold
-        if (speedVibration > 0):
-          speedVibration = speedVibration * speedVibration * 24
-          if (speedVibration > 0.01):
-            msg += "SPEED {} {}\n".format(speedVibration, self.speedPerc)
-            if self.fullArms:
-              self.play("msfs_arpm", speedVibration, "alt5")
-            self.play("msfs_vvne", speedVibration, "alt6")
+        speedVibration = (self.speedPerc - self.speedThreshold) / (1 - self.speedThreshold)
+        if (speedVibration > 0.01):
+          msg += "SPEED {} {}\n".format(speedVibration, self.speedPerc)
+          if self.fullArms:
+            self.play("msfs_arpm", speedVibration, "alt5")
+          self.play("msfs_vvne", speedVibration, "alt6")
                       
       if hasattr(self, "rpm"):
         self.rpmPerc = self.rpm/self.maxRpm
       if hasattr(self, "rpmPerc"):
-        engineVibration = self.rpmPerc - self.rpmThreshold
-        if (engineVibration > 0):
-          engineVibration = engineVibration * 3
-          if (engineVibration > 0.01):
-            msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
-            self.play("msfs_arpm", engineVibration, "alt7")
-            self.play("msfs_vrpm", engineVibration, "alt8")
+        engineVibration = (self.rpmPerc - self.rpmThreshold) / (1 - self.rpmThreshold)
+        if (engineVibration > 0.01):
+          msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
+          self.play("msfs_arpm", engineVibration, "alt7")
+          self.play("msfs_vrpm", engineVibration, "alt8")
    
       if hasattr(self, "g"):
         gForceVibration = (self.g - self.gfeThreshold) / 4
@@ -168,7 +164,7 @@ class BaseSim():
         msg += "Flp {} {} {} {}\n".format(flapsChange, flapPos, gearChange, gearPos)
         if self.fullArms:
           self.play("msfs_arpm", 0.2, "alt11") 
-        self.play("msfs_vfla", 0.6, "alt12")
+        self.play("msfs_vfla", 0.5, "alt12")
 
       if self.gun or self.cannon or self.hit:
         if self.hit:
