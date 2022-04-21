@@ -54,7 +54,7 @@ Actually it supports 7 patterns in the Vest:
 
 You must place `DCS_To_bHap.lua` in the folder `C:\Users\YOUR USERNAME\Saved Games\DCS\Scripts\Hooks`. If the "Hooks" folder doen's exist, create it. 
 
-This wonderfull LUA script is based on the script from [FlyPT Mover](https://www.flyptmover.com/) by Pedro Antunes, just adding a couple of variables.
+This LUA script is based on the wonderfull script from [FlyPT Mover](https://www.flyptmover.com/) by Pedro Antunes, just adding a couple of variables.
 
 Actually it supports 7 patterns in the Vest:
 
