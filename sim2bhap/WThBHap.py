@@ -9,9 +9,12 @@ import logging as log
 import baseBHap
 import urllib.request
 import json
+import pygame
 
 urls = 'http://{}:{}/state'
 urli = 'http://{}:{}/indicators'
+joyNumber = 1
+joytrigger = 5
 
 class Sim(baseBHap.BaseSim):
   def __init__(self, port = 8111, ipAddr = '127.0.0.1'):
@@ -20,6 +23,10 @@ class Sim(baseBHap.BaseSim):
     self.urli = urli.format(ipAddr, port)
     self.acc = None
     self.simTime = None
+    self.triggerWorkaround = True
+
+  def __del__(self):
+    pass
     
     
   def parseTelem(self, varDict):
@@ -29,18 +36,28 @@ class Sim(baseBHap.BaseSim):
     else:
       return
     self.prevAcc = self.acc
+    
+    
     if 'Ny' in varDict:
       self.g = varDict['Ny']
       self.acc = varDict['Ny']*9.8
       if (self.prevAcc is not None):
         self.accelChange = abs(self.acc - self.prevAcc) / ((self.simTime - self.prevSimTime) * 50)
-        
+       
+    # "type": "f4u-1c",    
     if "weapon1" in varDict:
       if varDict["weapon1"]:
         self.gun = 1
     if "weapon2" in varDict:
       if varDict["weapon2"]:
         self.cannon = 1
+    if (self.triggerWorkaround):
+      try:
+        pygame.event.pump()
+        if ("type" in varDict) and (varDict["type"] in ("f4u-1c",)) and (self.joy.get_button(joytrigger)):
+          self.cannon = 1
+      except:
+        self.triggerWorkaround = False
       
     if "H, m"  in varDict:
       self.alt = varDict["H, m"]
@@ -75,6 +92,14 @@ class Sim(baseBHap.BaseSim):
     self.motionTick = None
     self.acc = None
     self.lastAccel = None
+    
+    if (self.triggerWorkaround):
+      try:
+        pygame.init()
+        pygame.joystick.init()
+        self.joy = pygame.joystick.Joystick(joyNumber)
+      except:
+        self.triggerWorkaround = False
 
     errCode = 'valid'
     try:
@@ -93,6 +118,10 @@ class Sim(baseBHap.BaseSim):
     return (msg, errCode)
 
   def stop(self):
+    if (self.triggerWorkaround):
+      pygame.joystick.quit()
+      pygame.quit()
+  
     baseBHap.BaseSim.stop(self)
     if self.s:
       self.s.close()
