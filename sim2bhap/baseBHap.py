@@ -130,7 +130,7 @@ class BaseSim():
         if self.rpmPerc < 1.0:
           engineVibration = (self.rpmPerc - self.rpmThreshold) / ((1 - self.rpmThreshold) * 6)
         else:
-          engineVibration = 1.0/6 + ((self.rpmPerc - 1.0) *2) / (1 - self.rpmThreshold)
+          engineVibration = 1.0/6 + ((self.rpmPerc - 1.0) *1) / ((1 - self.rpmThreshold) * 2.5)
         if (engineVibration > 0.01):
           msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
           self.play("msfs_arpm", engineVibration, "alt7")

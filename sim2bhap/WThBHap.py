@@ -95,8 +95,10 @@ class Sim(baseBHap.BaseSim):
     
     if (self.triggerWorkaround):
       try:
-        pygame.init()
-        pygame.joystick.init()
+        if not pygame.get_init():
+          pygame.init()
+        if not pygame.joystick.get_init():
+          pygame.joystick.init()
         self.joy = pygame.joystick.Joystick(joyNumber)
       except:
         self.triggerWorkaround = False
@@ -119,8 +121,9 @@ class Sim(baseBHap.BaseSim):
 
   def stop(self):
     if (self.triggerWorkaround):
-      pygame.joystick.quit()
-      pygame.quit()
+      #pygame.joystick.quit()
+      #pygame.quit()
+      pass
   
     baseBHap.BaseSim.stop(self)
     if self.s:
