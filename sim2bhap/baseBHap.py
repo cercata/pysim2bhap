@@ -94,6 +94,12 @@ class BaseSim():
       if (time.time() - self.lastPacket) > 0.5:
         msg = "No fresh telemetry data\n"
         return (msg, errCode)
+        
+      if hasattr(self, "speed"):
+        if (self.speed < 0.1):
+          msg = "Plane not moving, skipping cycle\n"
+          return (msg, errCode)
+        
       
       if hasattr(self, "accelChange"):
         impactForce = ((self.accelChange - self.accelThreshold) / 20.0) * 2 + 0.0099

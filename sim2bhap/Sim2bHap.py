@@ -129,12 +129,8 @@ def runFunc():
       import DCSBHap
       sim = DCSBHap.Sim(port, ipAddr)
     elif simName == 'WThunder':
-      try:
-        import WThBHap
-        sim = WThBHap.Sim(port, ipAddr)
-      except:
-        log.exception('')
-        sim = dummySim(port, ipAddr)
+      import WThBHap
+      sim = WThBHap.Sim(port, ipAddr)
     else:
       display_msg("Invalid sim\n", tag = "error")  
       run = 0
