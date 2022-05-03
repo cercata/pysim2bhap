@@ -1,0 +1,3 @@
+pygame==2.1.2
+pysimconnect==0.2.3
+websocket_client==1.3.2

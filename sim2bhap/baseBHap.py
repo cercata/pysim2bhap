@@ -144,7 +144,7 @@ class BaseSim():
           self.play("msfs_vrpm", engineVibration, "alt8")
    
       if hasattr(self, "g"):
-        gForceVibration = (self.g - self.gfeThreshold) / 4
+        gForceVibration = (self.g - self.gfeThreshold) / 6
 #        if (gForceVibration > 0):
 #          gForceVibration = gForceVibration * 8
         if (gForceVibration > 0.01):
