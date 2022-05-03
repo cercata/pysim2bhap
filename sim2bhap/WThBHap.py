@@ -76,16 +76,19 @@ class Sim(baseBHap.BaseSim):
   
   def recvData(self):
 
-    response =  urllib.request.urlopen(self.urls)
-    content = response.read()
-    varDict = json.loads(content)
-    response =  urllib.request.urlopen(self.urli)
-    content = response.read()
-    varDict.update(json.loads(content))
-
-    self.parseTelem(varDict)
-    
-    self.lastPacket = time.time()
+    try:
+      response =  urllib.request.urlopen(self.urls, timeout = 0.5)
+      content = response.read()
+      varDict = json.loads(content)
+      response =  urllib.request.urlopen(self.urli, timeout = 0.5)
+      content = response.read()
+      varDict.update(json.loads(content))
+      
+      self.parseTelem(varDict)
+      
+      self.lastPacket = time.time()
+    except:
+      log.exception('')
 
   def start(self):
     self.s = None

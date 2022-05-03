@@ -92,6 +92,7 @@ class BaseSim():
       self.recvData()
       
       if (time.time() - self.lastPacket) > 0.5:
+        msg = "No fresh telemetry data\n"
         return (msg, errCode)
       
       if hasattr(self, "accelChange"):
