@@ -95,10 +95,10 @@ class BaseSim():
         msg = "No fresh telemetry data\n"
         return (msg, errCode)
         
-      if hasattr(self, "speed"):
-        if (self.speed < 0.1):
-          msg = "Plane not moving, skipping cycle\n"
-          return (msg, errCode)
+      #if hasattr(self, "speed"):
+      #  if (self.speed < 20):
+      #    msg = "Plane not moving, skipping cycle\n"
+      #    return (msg, errCode)
         
       
       if hasattr(self, "accelChange"):
@@ -106,7 +106,7 @@ class BaseSim():
         
         if impactForce >= 0.01:
           msg += "Acc {} {}\n".format(impactForce, self.accelChange)
-          self.play("msfs_arpm", impactForce, "alt1") 
+          self.play("msfs_arpm", impactForce * 1.5, "alt1") 
           self.play("msfs_vace", impactForce, "alt2") 
      
       if self.cycle % 3 != 0:
@@ -140,7 +140,7 @@ class BaseSim():
           engineVibration = 1.0/6 + ((self.rpmPerc - 1.0) *1) / ((1 - self.rpmThreshold) * 2.5)
         if (engineVibration > 0.01):
           msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
-          self.play("msfs_arpm", engineVibration, "alt7")
+          self.play("msfs_arpm", engineVibration * 0.6, "alt7")
           self.play("msfs_vrpm", engineVibration, "alt8")
    
       if hasattr(self, "g"):
@@ -150,7 +150,7 @@ class BaseSim():
         if (gForceVibration > 0.01):
             msg += "GFe {} {}\n".format(gForceVibration, self.g)
             if self.fullArms:
-              self.play("msfs_arpm", gForceVibration, "alt9")
+              self.play("msfs_arpm", gForceVibration * 0.4, "alt9")
             self.play("msfs_vgfe", gForceVibration, "alt10")
 
       flapsChange = 0
@@ -174,7 +174,7 @@ class BaseSim():
         msg += "Flp {} {} {} {}\n".format(flapsChange, flapPos, gearChange, gearPos)
         if self.fullArms:
           self.play("msfs_arpm", 0.2, "alt11") 
-        self.play("msfs_vfla", 0.5, "alt12")
+        self.play("msfs_vfla", 0.2, "alt12")
 
       if self.gun or self.cannon or self.hit:
         if self.hit:
@@ -184,7 +184,7 @@ class BaseSim():
         else:
           impactForce = 0.3
         msg += "hit {}\n".format(impactForce)
-        self.play("msfs_arpm", impactForce / 2, "alt13", 2) 
+        self.play("msfs_arpm", impactForce, "alt13", 2) 
         self.play("msfs_vace", impactForce, "alt14", 2)
         self.gun = 0
         self.cannon = 0

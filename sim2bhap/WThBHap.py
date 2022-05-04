@@ -73,6 +73,9 @@ class Sim(baseBHap.BaseSim):
       self.aoa = varDict["AoA, deg"]
     if "vario" in varDict:
       self.vario = varDict["vario"]
+
+    self.lastPacket = time.time()
+
   
   def recvData(self):
 
@@ -86,7 +89,6 @@ class Sim(baseBHap.BaseSim):
       
       self.parseTelem(varDict)
       
-      self.lastPacket = time.time()
     except:
       log.exception('')
 
