@@ -52,7 +52,7 @@ Actually it supports 7 patterns in the Vest:
 
 ## DCS World | Digital Combat Simulator
 
-You must place `DCS_To_bHap.lua` in the folder `C:\Users\YOUR USERNAME\Saved Games\DCS\Scripts\Hooks`. If the "Hooks" folder doen's exist, create it. 
+You must place [`DCS_To_bHap.lua`](https://github.com/cercata/pysim2bhap/blob/main/DCS_To_bHap.lua) in the folder `C:\Users\YOUR USERNAME\Saved Games\DCS\Scripts\Hooks`. If the "Hooks" folder doen's exist, create it. 
 
 This LUA script is based on the wonderfull script from [FlyPT Mover](https://www.flyptmover.com/) by Pedro Antunes, just adding a couple of variables.
 
