@@ -79,7 +79,7 @@ class Sim(baseBHap.BaseSim):
       self.flaps = varDict["flaps, %"] / 100.0
     if "IAS, km/h" in varDict:
       self.speed = varDict["IAS, km/h"]
-      self.speeds.speedList(self.speed)
+      self.speedList.append(self.speed)
     if "AoA, deg" in varDict:
       self.aoa = varDict["AoA, deg"]
     if "vario" in varDict:
