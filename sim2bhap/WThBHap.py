@@ -35,7 +35,7 @@ class Sim(baseBHap.BaseSim):
     for i in range(speedChangeCycles-1):
       if self.speedList[i] != self.speedList[i+1]:
         return True
-    if self.speedList[-1] == 0:
+    if self.speedList[-1] < 50:
       return True
     return False
     
@@ -85,8 +85,8 @@ class Sim(baseBHap.BaseSim):
     if "vario" in varDict:
       self.vario = varDict["vario"]
 
-    if self.speedValid():
-      self.lastPacket = time.time()
+    #if self.speedValid():
+    self.lastPacket = time.time()
 
   
   def recvData(self):
