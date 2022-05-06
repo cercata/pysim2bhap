@@ -10,11 +10,11 @@ import baseBHap
 import urllib.request
 import json
 import pygame
+from collections import deque
 
 urls = 'http://{}:{}/state'
 urli = 'http://{}:{}/indicators'
-joyNumber = 1
-joytrigger = 5
+speedChangeCycles = 4
 
 class Sim(baseBHap.BaseSim):
   def __init__(self, port = 8111, ipAddr = '127.0.0.1'):
@@ -23,11 +23,21 @@ class Sim(baseBHap.BaseSim):
     self.urli = urli.format(ipAddr, port)
     self.acc = None
     self.simTime = None
-    self.triggerWorkaround = True
+    self.speedList = deque(maxlen = speedChangeCycles)
 
   def __del__(self):
     pass
     
+    
+  def speedValid(self):
+    if speedChangeCycles != len(self.speedList):
+      return True
+    for i in range(speedChangeCycles-1):
+      if self.speedList[i] != self.speedList[i+1]:
+        return True
+    if self.speedList[-1] == 0:
+      return True
+    return False
     
   def parseTelem(self, varDict):
     if ('valid' in varDict) and (varDict['valid']):
@@ -54,7 +64,7 @@ class Sim(baseBHap.BaseSim):
     if (self.triggerWorkaround):
       try:
         pygame.event.pump()
-        if ("type" in varDict) and (varDict["type"] in ("f4u-1c",)) and (self.joy.get_button(joytrigger)):
+        if ("type" in varDict) and (varDict["type"] in self.planesBugged) and (self.joy.get_button(self.joytrigger)):
           self.cannon = 1
       except:
         self.triggerWorkaround = False
@@ -69,12 +79,14 @@ class Sim(baseBHap.BaseSim):
       self.flaps = varDict["flaps, %"] / 100.0
     if "IAS, km/h" in varDict:
       self.speed = varDict["IAS, km/h"]
+      self.speeds.speedList(self.speed)
     if "AoA, deg" in varDict:
       self.aoa = varDict["AoA, deg"]
     if "vario" in varDict:
       self.vario = varDict["vario"]
 
-    self.lastPacket = time.time()
+    if self.speedValid():
+      self.lastPacket = time.time()
 
   
   def recvData(self):
@@ -104,7 +116,7 @@ class Sim(baseBHap.BaseSim):
           pygame.init()
         if not pygame.joystick.get_init():
           pygame.joystick.init()
-        self.joy = pygame.joystick.Joystick(joyNumber)
+        self.joy = pygame.joystick.Joystick(self.joyNumber)
       except:
         self.triggerWorkaround = False
 

@@ -26,6 +26,10 @@ fullArms = False
 ignoreFlaps = False
 forceMultiplier = 1.0
 durationMultiplier = 1.0
+triggerWorkaround = True
+joyNumber = 1
+joytrigger = 5
+planesBugged = ("f4u-1c",)
 iconFile = 'mini_plane.ico'
 #########################################
 
@@ -147,6 +151,10 @@ def runFunc():
       sim.maxAoA         = maxAoA
       sim.forceMultiplier= forceMultiplier
       sim.durationMultiplier = durationMultiplier
+      sim.triggerWorkaround = triggerWorkaround
+      sim.joyNumber      = joyNumber
+      sim.joytrigger     = joytrigger
+      sim.planesBugged   = planesBugged
       output = sim.start()
       time.sleep(1)
       display_msg(output[0], tag = output[1])
@@ -205,8 +213,9 @@ def tacopyall():
 def popup(event):
   menu.post(event.x_root, event.y_root)
   
-valuesVarlist = ['activeSim', 'speedThreshold', 'rpmThreshold', 'aoaThreshold', 'gfeThreshold', 
-   'maxSpeed', 'maxRpm', 'maxAoA', 'accelThreshold', 'fullArms', 'ignoreFlaps', 'forceMultiplier', 'durationMultiplier']
+valuesVarlist = ['activeSim', 'speedThreshold', 'rpmThreshold', 'aoaThreshold', 'gfeThreshold',
+   'maxSpeed', 'maxRpm', 'maxAoA', 'accelThreshold', 'fullArms', 'ignoreFlaps', 'forceMultiplier', 
+   'durationMultiplier', 'triggerWorkaround', 'joyNumber', 'joytrigger', 'planesBugged']
 def loadVars(altSection = ""):
   for varName in valuesVarlist:
     if altSection and parser.has_option(altSection, varName):
@@ -218,8 +227,17 @@ def loadVars(altSection = ""):
     #print ("{} {}".format(section,varName))
     if varName in ('activeSim',):
       globals()[varName] = parser.get(section,varName).strip()
-    elif varName in ('fullArms', 'ignoreFlaps'):
+    elif varName in ('fullArms', 'ignoreFlaps', 'triggerWorkaround'):
       globals()[varName] = parser.getboolean(section,varName)
+    elif varName in ('joyNumber', 'joytrigger'):
+      globals()[varName] = parser.getint(section,varName)
+    elif varName in ('planesBugged', ):
+      rawList = parser.get(section,varName)
+      myList = []
+      for elem in rawList.split(','):
+        myList.append(elem.strip())
+      print (myList)
+      globals()[varName] = myList
     else:
       globals()[varName] = parser.getfloat(section,varName)
       
