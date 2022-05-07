@@ -236,7 +236,6 @@ def loadVars(altSection = ""):
       myList = []
       for elem in rawList.split(','):
         myList.append(elem.strip())
-      print (myList)
       globals()[varName] = myList
     else:
       globals()[varName] = parser.getfloat(section,varName)

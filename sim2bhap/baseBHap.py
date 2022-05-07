@@ -140,8 +140,12 @@ class BaseSim():
           engineVibration = 1.0/6 + ((self.rpmPerc - 1.0) *1) / ((1 - self.rpmThreshold) * 2.5)
         if (engineVibration > 0.01):
           msg += "RPM {} {}\n".format(engineVibration, self.rpmPerc)
-          self.play("msfs_arpm", engineVibration * 0.6, "alt7")
-          self.play("msfs_vrpm", engineVibration, "alt8")
+          if self.fullArms:
+            self.play("msfs_vrpm", engineVibration * 0.5, "alt8")
+            self.play("msfs_arpm", engineVibration * 0.8, "alt7")
+        else:
+            self.play("msfs_vrpm", engineVibration, "alt8")
+            self.play("msfs_arpm", engineVibration * 0.6, "alt7")
    
       if hasattr(self, "g"):
         gForceVibration = (self.g - self.gfeThreshold) / 6
