@@ -5,7 +5,7 @@ bHaptics support for simulators
 
 - Download the lastest [release](https://github.com/cercata/pysim2bhap/releases)
 - Unzip it to a folder of your choice
-- Enable telemetry for the desired game. Instructions in further sections.
+- Enable telemetry for the desired game. Instructions for each game in further sections.
 - Launch the game, and the bHaptics player.
 - Launch `Sim2bHap.exe`, select a preset or select the options you want, then click run.
    * You can edit the `Sim2bHap.ini` to add your presets for you preferred planes.
