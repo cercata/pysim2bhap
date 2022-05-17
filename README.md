@@ -9,7 +9,7 @@ bHaptics support for simulators
 - Launch the game, and the bHaptics player.
 - Launch `Sim2bHap.exe`, select a preset or select the options you want, then click run.
    * You can edit the `Sim2bHap.ini` to add your presets for you preferred planes.
-   * If you change the plane, click stop, select new setting, and click run.
+   * If you change the aircraft, click stop, select new setting, and click run.
 
 ## Microsoft Flight Simulator
 This has started as a prototype for having some haptics feedback within [MSFS](https://www.flightsimulator.com/), using the [Tactsuit X40](https://www.bhaptics.com/tactsuit/tactsuit-x40) Vest and [Tactosy for arms](https://www.bhaptics.com/tactsuit/tactosy-for-arms) from [bHaptics](https://www.bhaptics.com/). It should work also with the [Tactsuit X16](https://www.bhaptics.com/tactsuit/tactsuit-x16) Vest.
