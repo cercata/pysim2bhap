@@ -131,7 +131,10 @@ def runFunc():
       sim = il2bBHap.Sim(port, ipAddr)
     elif simName == 'DCS':
       import DCSBHap
-      sim = DCSBHap.Sim(port, ipAddr)
+      sim = DCSBHap.Sim(port, ipAddr, simName)
+    elif simName == 'DR2':
+      import DCSBHap
+      sim = DCSBHap.Sim(port, ipAddr, simName)
     elif simName == 'WThunder':
       import WThBHap
       sim = WThBHap.Sim(port, ipAddr)
@@ -155,6 +158,7 @@ def runFunc():
       sim.joyNumber      = joyNumber
       sim.joytrigger     = joytrigger
       sim.planesBugged   = planesBugged
+      sim.simName        = simName
       output = sim.start()
       time.sleep(1)
       display_msg(output[0], tag = output[1])
@@ -383,7 +387,7 @@ if __name__ == "__main__":
     simCombo = Combobox(f0, width=12, state="readonly")
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
-    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder']
+    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder', 'DR2']
     simCombo.bind("<<ComboboxSelected>>", simSelected)
     
     try:
