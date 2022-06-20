@@ -84,3 +84,19 @@ Actually it supports 7 patterns in the Vest:
 The same patterns than DCS are supported. 
 
 No need to configure anything on the game, the game automatically exports data via an HTTP server on port 8111
+
+# Dirt Rally 2
+
+You have to enable udp in file `Documents\My Games\DiRT Rally 2.0\hardwaresettings\hardware_settings_config_vr.xml`, and set extradata to 3:
+
+```<motion_platform>
+    <udp enabled="true" extradata="3" ip="127.0.0.1" port="20777" delay="1" />
+```
+
+Actually it supports 3 patterns in the Vest:
+
+- When the RPM exceed threshold, my chest starts vibrating gradually
+- When acceleration changes to quickly , all the vest vibrates
+- Vibration when you change gear
+
+
