@@ -87,7 +87,7 @@ No need to configure anything on the game, the game automatically exports data v
 
 # Dirt Rally 2
 
-You have to enable udp in file `Documents\My Games\DiRT Rally 2.0\hardwaresettings\hardware_settings_config_vr.xml`, and set extradata to 3:
+You have to enable udp and set extradata to 3 in file: `Documents\My Games\DiRT Rally 2.0\hardwaresettings\hardware_settings_config_vr.xml`
 
 ```<motion_platform>
     <udp enabled="true" extradata="3" ip="127.0.0.1" port="20777" delay="1" />
