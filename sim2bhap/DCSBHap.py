@@ -22,6 +22,7 @@ class Sim(baseBHap.BaseSim):
     self.acc = None
     self.shells = None
     self.simNum = 1 if simName == 'DCS' else 0
+    #self.isCar = False if simName == 'DCS' else True
     
     
   def parseTelem(self, floatList):
@@ -57,26 +58,39 @@ class Sim(baseBHap.BaseSim):
     else:
       self.gLon = float(floatList[34])
       self.gLat = float(floatList[35])
+      self.vlfw = float(floatList[23])
+      self.vrfw = float(floatList[24])
+      self.vlrw = float(floatList[21])
+      self.vrrw = float(floatList[22])
       
-    self.rpmPerc = float(floatList[25]) / 100.0 if self.simNum else floatList[37]/floatList[63]
+    if self.simNum:
+      self.rpmPerc = float(floatList[25]) / 100.0 
+    else:
+      self.rpmPerc = floatList[37]/floatList[63] if floatList[63] else 0.0
     self.gear = float(floatList[19]) if self.simNum else floatList[33]
     #sum([float(floatList[13]), float(floatList[15]), float(floatList[16])])
     self.speed = float(floatList[23]) * 3.6 if self.simNum else float(floatList[7])
   
   def recvData(self):
 
+    numPackets = 0
     while True:
       try:
          (msg, addr) = self.s.recvfrom(10000)
-         if self.simNum == 1:
-           floatList = refloatList.findall(msg.decode('ascii'))
-         else:
-           floatList = structDR2.unpack(msg[0:264])
-         self.parseTelem(floatList)
+         numPackets += 1
 
       except socket.error as e:
         err = e.args[0]
         if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
+          if numPackets == 0:
+            return
+          else:
+            numPackets == 0
+            if self.simNum == 1:
+              floatList = refloatList.findall(msg.decode('ascii'))
+            else:
+              floatList = structDR2.unpack(msg[0:264])
+            self.parseTelem(floatList)
             return
         else:
             # a "real" error occurred

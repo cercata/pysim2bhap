@@ -29,6 +29,7 @@ class BaseSim():
     self.durationMultiplier = 1.0
     self.ignoreFlaps = False
     self.fullArms = False
+    self.isCar = False
     self.player = haptic_player.HapticPlayer()
     
   def play(self, name, intensity, altname, duration = 1):
@@ -70,13 +71,20 @@ class BaseSim():
     try:
       self.player = haptic_player.HapticPlayer()
       
+      if self.isCar:
+        self.player.register("car_vace", "car_vace.tact")
+        self.player.register("car_vlfw", "car_vlfw.tact")
+        self.player.register("car_vrfw", "car_vrfw.tact")
+        self.player.register("car_vlrw", "car_vlrw.tact")
+        self.player.register("car_vrrw", "car_vrrw.tact")
+      else:
+        self.player.register("msfs_vace", "msfs_vace.tact")
+        self.player.register("msfs_vaoa", "msfs_vaoa.tact")
       self.player.register("msfs_vvne", "msfs_vvne.tact")
       self.player.register("msfs_vrpm", "msfs_vrpm.tact")
       self.player.register("msfs_vgfe", "msfs_vgfe.tact")
       self.player.register("msfs_arpm", "msfs_arpm.tact")
-      self.player.register("msfs_vace", "msfs_vace.tact")
       self.player.register("msfs_vfla", "msfs_vfla.tact")
-      self.player.register("msfs_vaoa", "msfs_vaoa.tact")
     except:
       msg = 'Error conecting. Is bHaptics player app running?\n'
       log.exception(msg)
