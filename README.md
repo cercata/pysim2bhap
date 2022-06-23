@@ -81,9 +81,10 @@ Actually it supports 7 patterns in the Vest:
 
 # War Thunder
 
+No need to configure anything on the game, the game automatically exports data via an HTTP server on port 8111
+
 The same patterns than DCS are supported. 
 
-No need to configure anything on the game, the game automatically exports data via an HTTP server on port 8111
 
 # Dirt Rally 2
 
@@ -100,4 +101,14 @@ Actually it supports 3 patterns in the Vest:
 - When acceleration changes to quickly , all the vest vibrates
 - Vibration when you change gear
 
+# Raceroom Racing Experience
+
+No need to configure anything on the game, the game automatically exports data via shared memory
+
+Actually it supports 4 patterns in the Vest:
+
+- When the RPM exceed threshold, my chest starts vibrating gradually
+- Vibration when you change gear
+- When acceleration changes to quickly , the upper of the vest vibrates
+- If the suspension moves too fast, the lower part of the best vibrates, only the part close to the wheel(s) moving.
 
