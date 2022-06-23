@@ -107,10 +107,7 @@ class Sim(baseBHap.BaseSim):
             log.exception('')
 
   def start(self):
-    self.s = None
     self.motionTick = None
-    self.acc = None
-    self.lastAccel = None
 
     errCode = 'valid'
     try:

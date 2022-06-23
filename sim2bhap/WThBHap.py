@@ -106,9 +106,7 @@ class Sim(baseBHap.BaseSim):
 
   def start(self):
     self.s = None
-    self.motionTick = None
     self.acc = None
-    self.lastAccel = None
     
     if (self.triggerWorkaround):
       try:

@@ -4,8 +4,6 @@ import struct
 import os
 from multiprocessing import shared_memory
 
-
-
 structInt32    = struct.Struct("@"+"i")
 structInt32_2  = struct.Struct("@"+"ii")
 structFloat_3  = struct.Struct("@"+"f"*3)

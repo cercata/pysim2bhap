@@ -10,6 +10,10 @@ import traceback
 import logging as log
 
 rad2Deg = 57.2958
+susPatFile = ['car_vlfw', 'car_vrfw', 'car_vlrw', 'car_vrrw']
+susPatName = ['FLW',      'FRW',      'RLW',      'RRW']
+susPatAlt  = ['alt15',    'alt16',    'alt17',    'alt18']
+
 
 class BaseSim():
   def __init__(self, port = 29373, ipAddr = '127.0.0.1'):
@@ -53,6 +57,7 @@ class BaseSim():
     self.gun    = True if firing (must be set to false in runCycle
     self.cannon = True if firing (must be set to false in runCycle
     self.hit    = True if impacted (must be set to false in runCycle
+    self.susVel = suspension velocity array [FL, FR, RL, RR]
     '''
     
     
@@ -115,11 +120,20 @@ class BaseSim():
         if impactForce >= 0.01:
           msg += "Acc {} {}\n".format(impactForce, self.accelChange)
           self.play("msfs_arpm", impactForce * 1.5, "alt1") 
-          self.play("msfs_vace", impactForce, "alt2") 
-     
+          if self.isCar:
+            self.play("car_vace", impactForce, "alt2") 
+          else:
+            self.play("msfs_vace", impactForce, "alt2") 
+      
+      if self.isCar and hasattr(self, "susVel"): 
+        for i in range(4):
+          suspVibration = (self.susVel[i] - self.maxRpm) * 5
+          if (suspVibration > 0.01):
+            msg += "{} {} {}\n".format(susPatName[i], suspVibration, self.susVel[i])
+            self.play(susPatFile[i], suspVibration, susPatAlt[i])
+
       if self.cycle % 3 != 0:
         return (msg, errCode)
-   
    
       if hasattr(self, "aoa"):
         aoaVibration = ((self.aoa/self.maxAoA) - self.aoaThreshold) / (1 - self.aoaThreshold)

@@ -135,6 +135,9 @@ def runFunc():
     elif simName == 'DR2':
       import DCSBHap
       sim = DCSBHap.Sim(port, ipAddr, simName)
+    elif simName == 'R3E':
+      import R3EBHap
+      sim = R3EBHap.Sim()
     elif simName == 'WThunder':
       import WThBHap
       sim = WThBHap.Sim(port, ipAddr)
@@ -387,7 +390,7 @@ if __name__ == "__main__":
     simCombo = Combobox(f0, width=12, state="readonly")
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
-    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder', 'DR2']
+    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder', 'DR2', 'R3E']
     simCombo.bind("<<ComboboxSelected>>", simSelected)
     
     try:
@@ -485,7 +488,7 @@ if __name__ == "__main__":
     maxSpeedEntry.grid(row=1, column=1, padx=2, pady=(10,6), sticky=W)
     maxSpeedEntry.insert(0,maxSpeed)
 
-    maxRpmLabel = Label(f1_1, text="Max RPM: ")
+    maxRpmLabel = Label(f1_1, text="Max RPM/Susp: ")
     maxRpmLabel.grid(row=2, column=0, padx=(10,2), pady=3, sticky=W)
     maxRpmEntry = Entry(f1_1, width=10)
     maxRpmEntry.grid(row=2, column=1, padx=2, pady=(6,6), sticky=W)

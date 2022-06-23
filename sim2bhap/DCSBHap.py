@@ -1,7 +1,6 @@
 import socket
 import time
 import errno
-import haptic_player
 import os
 import time
 import math
@@ -97,10 +96,6 @@ class Sim(baseBHap.BaseSim):
             log.exception('')
 
   def start(self):
-    self.s = None
-    self.motionTick = None
-    self.acc = None
-    self.lastAccel = None
 
     errCode = 'valid'
     try:
