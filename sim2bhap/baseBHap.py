@@ -127,7 +127,7 @@ class BaseSim():
       
       if self.isCar and hasattr(self, "susVel"): 
         for i in range(4):
-          suspVibration = (self.susVel[i] - self.maxRpm) * 5
+          suspVibration = (abs(self.susVel[i]) - self.maxRpm) * 5
           if (suspVibration > 0.01):
             msg += "{} {} {}\n".format(susPatName[i], suspVibration, self.susVel[i])
             self.play(susPatFile[i], suspVibration, susPatAlt[i])
