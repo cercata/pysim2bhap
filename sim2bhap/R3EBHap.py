@@ -12,36 +12,57 @@ from multiprocessing import shared_memory
 
 structInt32    = struct.Struct("@"+"i")
 structInt32_2  = struct.Struct("@"+"ii")
+structFloat_2  = struct.Struct("@"+"f"*2)
 structFloat_3  = struct.Struct("@"+"f"*3)
+structFloat_4  = struct.Struct("@"+"f"*4)
 
 structDouble   = struct.Struct("@"+"d")
 structDouble_3 = struct.Struct("@"+"d"*3)
 structDouble_4 = struct.Struct("@"+"d"*4)
 
 class Sim(baseBHap.BaseSim):
-  def __init__(self, port = 0, ipAddr = ''):
+  def __init__(self, port = 0, ipAddr = '', simName = 'R3E'):
     baseBHap.BaseSim.__init__(self, port, ipAddr)
     self.s = None
     self.simTime = None
     self.acc = None
     self.shells = None
     self.isCar = True
+    self.lastPacket = 0
+    self.simNum = 1 if simName == 'R3E' else 0
+
     
     
   def parseTelem(self):
     buffer = self.shm.buf
   
-    self.prevSimTime = self.simTime
-    self.simTime, = structDouble.unpack(bytes(buffer[40:48]))
-
-    if self.simTime != self.prevSimTime:
-      self.lastPacket = time.time()
+    if self.simNum:
+      self.prevSimTime = self.simTime
+      self.simTime, = structDouble.unpack(bytes(buffer[40:48]))
+      if self.simTime != self.prevSimTime:
+        self.lastPacket = time.time()
+    else:
+      mGameState, = structInt32.unpack(bytes(buffer[8:12]))
+      #print ("mGameState %d" % (mGameState,))
+      if mGameState == 2:
+        self.prevSimTime = self.simTime
+        self.simTime = time.time()
+        self.lastPacket = time.time()
+      else:
+        self.rpmPerc = 0
+        self.accelChange = 0.0
+        self.susVel = [0.0, 0.0, 0.0, 0.0]
+        return
    
     #lveloc = structDouble_3.unpack(bytes(buffer[96:120]))
     #self.speed
     
     self.prevAcc = self.acc
-    self.acc = structDouble_3.unpack(bytes(buffer[144:168]))
+    if self.simNum:
+      self.acc = structDouble_3.unpack(bytes(buffer[144:168]))
+    else:
+      self.acc = structFloat_3.unpack(bytes(buffer[6956:6968])) # mLocalAcceleration 
+    
     accel2 = math.sqrt(self.acc[0]*self.acc[0]+self.acc[1]*self.acc[1])
     accel = math.sqrt(self.acc[2]*self.acc[2]+accel2*accel2)
     if (self.prevAcc is not None):
@@ -54,12 +75,24 @@ class Sim(baseBHap.BaseSim):
     
     #gForce = structDouble_3.unpack(bytes(buffer[288:312]))
     
-    self.susVel = structDouble_4.unpack(bytes(buffer[416:448]))
+    if self.simNum:
+      self.susVel = structDouble_4.unpack(bytes(buffer[416:448]))
+    else:
+      self.susVel = structFloat_4.unpack(bytes(buffer[7356:7372])) # mSuspensionVelocity 
+      #print ("susVel %s" % (self.susVel,))
     
-    rps, max_rps, urps = structFloat_3.unpack(bytes(buffer[1340:1352]))
-    self.rpmPerc = rps / max_rps
+    if self.simNum:
+      rps, max_rps, urps = structFloat_3.unpack(bytes(buffer[1340:1352]))
+      self.rpmPerc = rps / max_rps
+    else:
+      mRpm, mMaxRPM = structFloat_2.unpack(bytes(buffer[6852:6860]))
+      self.rpmPerc = mRpm / mMaxRPM
     
-    self.gear, = structInt32.unpack(bytes(buffer[1352:1356]))
+    if self.simNum:
+      self.gear, = structInt32.unpack(bytes(buffer[1352:1356]))
+    else:
+      self.gear, = structInt32.unpack(bytes(buffer[6876:6880])) # mGear 
+      #print ("mGear %d" % (self.gear,))
   
 
   
@@ -72,9 +105,12 @@ class Sim(baseBHap.BaseSim):
     errCode = 'valid'
     try:
       try:
-        self.shm = shared_memory.SharedMemory("$R3E")
+        if self.simNum:
+          self.shm = shared_memory.SharedMemory("$R3E")
+        else:
+          self.shm = shared_memory.SharedMemory("$pcars2$")
       except FileNotFoundError:
-        msg = 'Shared memory not available. Is Raceroom running?\n'
+        msg = 'Shared memory not available. Is Raceroom/PC2/AMS2 running?\n'
         log.exception(msg)
         return (msg, 'error')
       try:

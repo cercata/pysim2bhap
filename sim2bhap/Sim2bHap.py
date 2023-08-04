@@ -137,7 +137,10 @@ def runFunc():
       sim = DCSBHap.Sim(port, ipAddr, simName)
     elif simName == 'R3E':
       import R3EBHap
-      sim = R3EBHap.Sim()
+      sim = R3EBHap.Sim(port, ipAddr, simName)
+    elif simName == 'PC2':
+      import R3EBHap
+      sim = R3EBHap.Sim(port, ipAddr, simName)
     elif simName == 'WThunder':
       import WThBHap
       sim = WThBHap.Sim(port, ipAddr)
@@ -390,7 +393,7 @@ if __name__ == "__main__":
     simCombo = Combobox(f0, width=12, state="readonly")
     simCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
     #hostCombo.bind('<<ComboboxSelected>>', conversion)
-    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder', 'DR2', 'R3E']
+    simCombo['values']=['MSFS', 'IL2BoX', 'DCS', 'WThunder', 'DR2', 'R3E', 'PC2']
     simCombo.bind("<<ComboboxSelected>>", simSelected)
     
     try:

@@ -112,3 +112,14 @@ Actually it supports 4 patterns in the Vest:
 - When acceleration changes to quickly , the upper of the vest vibrates
 - If the suspension moves too fast, the lower part of the best vibrates, only the part close to the wheel(s) moving.
 
+# Project Cars 2 and Automobilista 2
+
+Set Shared Memmory to Project Cars 2 in Options->System
+
+Actually it supports 4 patterns in the Vest:
+
+- When the RPM exceed threshold, my chest starts vibrating gradually
+- Vibration when you change gear
+- When acceleration changes to quickly , the upper of the vest vibrates
+- If the suspension moves too fast, the lower part of the best vibrates, only the part close to the wheel(s) moving.
+
