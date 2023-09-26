@@ -11,8 +11,10 @@ import logging as log
 
 rad2Deg = 57.2958
 susPatFile = ['car_vlfw', 'car_vrfw', 'car_vlrw', 'car_vrrw']
+susPatFileF= ['car_flfw', 'car_frfw', 'car_flrw', 'car_frrw']
 susPatName = ['FLW',      'FRW',      'RLW',      'RRW']
 susPatAlt  = ['alt15',    'alt16',    'alt17',    'alt18']
+susPatAltF = ['alt31',    'alt32',    'alt33',    'alt34']
 
 
 class BaseSim():
@@ -82,6 +84,13 @@ class BaseSim():
         self.player.register("car_vrfw", "car_vrfw.tact")
         self.player.register("car_vlrw", "car_vlrw.tact")
         self.player.register("car_vrrw", "car_vrrw.tact")
+        self.player.register("car_face", "car_face.tact")
+        self.player.register("car_frpm", "car_frpm.tact")
+        self.player.register("car_fgear", "car_fgear.tact")
+        self.player.register("car_flfw", "car_flfw.tact")
+        self.player.register("car_frfw", "car_frfw.tact")
+        self.player.register("car_flrw", "car_flrw.tact")
+        self.player.register("car_frrw", "car_frrw.tact")
       else:
         self.player.register("msfs_vace", "msfs_vace.tact")
         self.player.register("msfs_vaoa", "msfs_vaoa.tact")
@@ -121,7 +130,9 @@ class BaseSim():
           msg += "Acc {} {}\n".format(impactForce, self.accelChange)
           self.play("msfs_arpm", impactForce * 1.5, "alt1") 
           if self.isCar:
-            self.play("car_vace", impactForce, "alt2") 
+            if self.fullArms:
+              self.play("car_vace", impactForce, "alt2") 
+              self.play("car_face", impactForce * 2.0, "alt23") 
           else:
             self.play("msfs_vace", impactForce, "alt2") 
       
@@ -131,6 +142,8 @@ class BaseSim():
           if (suspVibration > 0.01):
             msg += "{} {} {}\n".format(susPatName[i], suspVibration, self.susVel[i])
             self.play(susPatFile[i], suspVibration, susPatAlt[i])
+            if self.fullArms:
+              self.play(susPatFileF[i], suspVibration, susPatAltF[i])
 
       if self.cycle % 3 != 0:
         return (msg, errCode)
@@ -165,7 +178,8 @@ class BaseSim():
           if self.fullArms:
             self.play("msfs_vrpm", engineVibration * 0.5, "alt8")
             self.play("msfs_arpm", engineVibration * 0.8, "alt7")
-        else:
+            self.play("car_frpm", engineVibration , "alt21")
+          else:
             self.play("msfs_vrpm", engineVibration, "alt8")
             self.play("msfs_arpm", engineVibration * 0.6, "alt7")
    
@@ -200,6 +214,7 @@ class BaseSim():
         msg += "Flp {} {} {} {}\n".format(flapsChange, flapPos, gearChange, gearPos)
         if self.fullArms:
           self.play("msfs_arpm", 0.2, "alt11") 
+          self.play("car_fgear", 1.0, "alt22") 
         self.play("msfs_vfla", 0.2, "alt12")
 
       if self.gun or self.cannon or self.hit:

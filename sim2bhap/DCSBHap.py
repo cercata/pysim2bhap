@@ -21,7 +21,7 @@ class Sim(baseBHap.BaseSim):
     self.acc = None
     self.shells = None
     self.simNum = 1 if simName == 'DCS' else 0
-    #self.isCar = False if simName == 'DCS' else True
+    self.isCar = False if simName == 'DCS' else True
     
     
   def parseTelem(self, floatList):

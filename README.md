@@ -123,3 +123,7 @@ Actually it supports 4 patterns in the Vest:
 - When acceleration changes to quickly , the upper of the vest vibrates
 - If the suspension moves too fast, the lower part of the best vibrates, only the part close to the wheel(s) moving.
 
+# Thanks
+
+- Thanks to Nickbond for creating the patterns for feet.
+- Thanks to Polybass for early testing
