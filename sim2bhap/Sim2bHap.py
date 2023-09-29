@@ -385,6 +385,19 @@ if __name__ == "__main__":
       root.wm_iconbitmap(iconFile)
     except:
       log.exception('Error setting ico file')      
+      
+    f0bis = Frame(root)
+    presetLabel = Label(f0bis, text="Preset:")
+    presetLabel.grid(row=0, column=0, padx=1, pady=2, sticky=W)
+    presetCombo = Combobox(f0bis, width=24, state="readonly", height=24)
+    presetCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
+    presetCombo['values']=["Default"] + sorted(presetList)
+    presetCombo.bind("<<ComboboxSelected>>", loadPreset)
+    
+    presetBtn = Button(f0bis, text="LOAD", command=loadPreset)
+    presetBtn.grid(row=0, column=2, padx=(10,2), pady=2, sticky=W)
+    
+    f0bis.pack(side=TOP, fill=X, padx=5, pady=(7,1))
 
     f0 = Frame(root)
      
@@ -438,20 +451,7 @@ if __name__ == "__main__":
     verbose.grid(row=0, column=13, columnspan=2, padx=2, pady=5, sticky=W)
     
     f0.pack(side=TOP, fill=X, padx=5, pady=(1,1))
-    
-    f0bis = Frame(root)
-    presetLabel = Label(f0bis, text="Preset:")
-    presetLabel.grid(row=0, column=0, padx=1, pady=2, sticky=W)
-    presetCombo = Combobox(f0bis, width=24, state="readonly", height=24)
-    presetCombo.grid(row=0, column=1, padx=2, pady=2, sticky=W)
-    presetCombo['values']=["Default"] + sorted(presetList)
-    presetCombo.bind("<<ComboboxSelected>>", loadPreset)
-    
-    presetBtn = Button(f0bis, text="LOAD", command=loadPreset)
-    presetBtn.grid(row=0, column=2, padx=(10,2), pady=2, sticky=W)
-    
-    f0bis.pack(side=TOP, fill=X, padx=5, pady=(7,1))
-    
+       
     f1 = Frame(root)
 
     f1_0 = Frame(f1, relief=SUNKEN, width = "500")
