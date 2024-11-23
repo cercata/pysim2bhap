@@ -1,5 +1,3 @@
-THIS PROJECT IS NOT SUPPORTED ANYMORE SINCE MY X40 BROKE !!!!! FEEL FREE TO DO WHATEVER YOU WANT WITH THE CODE !!!
-
 # pysim2bhap
 bHaptics support for simulators
 
